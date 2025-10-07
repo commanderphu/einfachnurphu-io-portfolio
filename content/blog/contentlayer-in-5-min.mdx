@@ -1,0 +1,58 @@
+---
+title: "Contentlayer in 5 Minuten"
+slug: "contentlayer-in-5-minuten"
+summary: "MDX tippsicher tippen, typsicher lesen – ohne Headless CMS."
+date: 2025-10-07
+tags: ["MDX", "Contentlayer", "Next.js"]
+published: true
+---
+
+import Callout from "@/components/mdx/Callout"
+
+<Callout>Warum Contentlayer? **Types**, **Speed**, **Zero SaaS**.</Callout>
+
+**1) Install**
+```bash
+pnpm add contentlayer next-contentlayer
+
+```
+**2) contentlayer.config.ts**
+
+```ts
+import { defineDocumentType, makeSource } from "contentlayer/source-files"
+
+export const Post = defineDocumentType(() => ({
+  name: "Post",
+  filePathPattern: `blog/**/*.mdx`,
+  fields: {
+    title: { type: "string", required: true },
+    date: { type: "date", required: true },
+    summary: { type: "string" },
+    tags: { type: "list", of: { type: "string" } },
+    published: { type: "boolean", default: true },
+  },
+  computedFields: {
+    slug: { type: "string", resolve: (doc) => doc._raw.flattenedPath.replace(/^blog\//, "") },
+  },
+}))
+
+export default makeSource({ contentDirPath: "content", documentTypes: [Post] })
+
+```
+**3) next.config.mjs**
+
+```js
+const { withContentlayer } = await import("next-contentlayer")
+export default withContentlayer()({ reactStrictMode: true })
+
+```
+**4) Use it**
+
+```ts
+import { allPosts } from "contentlayer/generated"
+export default function Blog() {
+  const posts = allPosts.sort((a,b)=>+new Date(b.date)-+new Date(a.date))
+  // render…
+}
+
+```

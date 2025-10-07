@@ -1,0 +1,58 @@
+---
+title: "RSS für deinen Blog in 3 Schritten"
+slug: "rss-in-3-schritten"
+summary: "Kleiner Feed, große Wirkung – für Reader, SEO & Syndication."
+date: 2025-10-07
+tags: ["RSS", "SEO", "Next.js"]
+published: true
+---
+
+**1) Paket**
+```bash
+pnpm add rss
+
+```
+**2) Feed-Generator `(lib/rss.ts)`**
+
+```ts
+import RSS from "rss"
+import { allPosts } from "contentlayer/generated"
+
+export async function generateRss() {
+  const feed = new RSS({
+    title: "einfachnurphu – Blog",
+    site_url: "https://einfachnurphu.io",
+    feed_url: "https://einfachnurphu.io/feed.xml",
+    description: "Clean IT. Flash speed.",
+    language: "de",
+  })
+
+  allPosts
+    .filter(p => p.published)
+    .sort((a,b)=>+new Date(b.date)-+new Date(a.date))
+    .forEach(p => {
+      feed.item({
+        title: p.title,
+        url: `https://einfachnurphu.io/blog/${p.slug}`,
+        date: p.date,
+        description: p.summary ?? "",
+      })
+    })
+
+  return feed.xml({ indent: true })
+}
+
+
+```
+
+**3) Route `(app/feed.xml/route.ts)`**
+```ts
+import { NextResponse } from "next/server"
+import { generateRss } from "@/lib/rss"
+
+export async function GET() {
+  const xml = await generateRss()
+  return new NextResponse(xml, { headers: { "Content-Type": "application/xml; charset=utf-8" } })
+}
+
+```
