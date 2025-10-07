@@ -1,12 +1,16 @@
 import { withContentlayer } from 'next-contentlayer'
+const isCF = process.env.CF_PAGES === '1' || process.env.CF_WORKER === '1'
 
-/** @type {import('next').NextConfig} */
+
+
 const nextConfig = {
   images: {
-    // Cast sorgt dafür, dass TS die Struktur akzeptiert
-    /** @type {import('next/dist/shared/lib/image-config').RemotePattern[]} */
-    remotePatterns: [{ protocol: 'https', hostname: '**' }],
+    unoptimized: true, // wichtig für Cloudflare Workers
   },
+  experimental: {
+    runtime: "edge", // aktiviert Edge-Umgebung für App Router
+  },
+  reactStrictMode: true,
 }
 
 export default withContentlayer(nextConfig)
