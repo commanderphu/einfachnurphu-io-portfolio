@@ -41,6 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 .contentlayer
-/contentlayer
-/.contentlayer
-/.contentlayer.d.ts
+.contentlayer.d.ts
+.contentlayer.json
+.contentlayer.d.ts.map
+.contentlayer.mjs
+.contentlayer.cjs
