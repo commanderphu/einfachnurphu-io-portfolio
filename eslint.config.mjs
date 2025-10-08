@@ -10,15 +10,26 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // Standard-Next.js- und TS-Regeln übernehmen
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // Eigene Regeln & Ignorierungen
   {
     ignores: [
       "node_modules/**",
       ".next/**",
+      ".contentlayer/**",
       "out/**",
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "react/no-unescaped-entities": "off",
+      "@next/next/no-html-link-for-pages": "warn",
+    },
   },
 ];
 

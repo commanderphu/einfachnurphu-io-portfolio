@@ -1,10 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
-import type { Project } from ".contentlayer/generated"
+import { type Project } from ".contentlayer/generated"
 
-type Props = { project: Project }
+type ProjectCardProps = {
+  project: Project
+}
 
-export default function ProjectCard({ project }: Props) {
+export default function ProjectCard({ project }: ProjectCardProps) {
+  const href = `/projects/${project.slug}`
+
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] transition-transform hover:-translate-y-1 will-change-transform ring-soft">
       {/* Cover */}
@@ -26,25 +30,36 @@ export default function ProjectCard({ project }: Props) {
 
       {/* Body */}
       <div className="p-4">
-        <Link href={project.url} prefetch={false} className="block text-lg font-semibold transition-colors hover:text-[var(--accent)]">
+        <Link
+          href={href}
+          prefetch={false}
+          className="block text-lg font-semibold transition-colors hover:text-[var(--accent)]"
+        >
           {project.title}
         </Link>
+
         {project.summary && (
-          <p className="mt-1 line-clamp-2 text-sm text-dim">{project.summary}</p>
+          <p className="mt-1 line-clamp-2 text-sm text-white/70">
+            {project.summary}
+          </p>
         )}
-        {project.tags?.length ? (
+
+        {project.tags && project.tags.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-2">
-            {project.tags.slice(0, 5).map((t: string) => (
-              <span key={t} className="text-[11px] rounded-full border border-white/15 px-2 py-0.5 text-white/70">
-                {t}
+            {project.tags.slice(0, 5).map((tag) => (
+              <span
+                key={tag}
+                className="text-[11px] rounded-full border border-white/15 px-2 py-0.5 text-white/70"
+              >
+                {tag}
               </span>
             ))}
           </div>
-        ) : null}
+        )}
       </div>
 
       {/* Hover border glow */}
-      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent group-hover:ring-[color-mix(in oklab,var(--accent) 45%, white)] transition-[ring]"></div>
+      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent group-hover:ring-[color-mix(in oklab,var(--accent) 45%, white)] transition-[ring]" />
     </div>
   )
 }

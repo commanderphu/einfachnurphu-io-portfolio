@@ -1,8 +1,13 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
+import animate from "tailwindcss-animate"
 
-export default {
- darkMode : ["class"],
-  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./content/**/*.{md,mdx}"],
+const config: Config = {
+  darkMode: ["class"],
+  content: [
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./content/**/*.{md,mdx}",
+  ],
   theme: {
     extend: {
       colors: {
@@ -16,9 +21,15 @@ export default {
           yellow: "#e5c890",
         },
       },
-      boxShadow: { soft: "0 8px 30px rgba(0,0,0,0.25)" },
-      borderRadius: { xl2: "1rem" },
+      boxShadow: {
+        soft: "0 8px 30px rgba(0,0,0,0.25)",
+      },
+      borderRadius: {
+        "2xl": "1rem", // Tailwind-konforme Schreibweise (statt `xl2`)
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+  plugins: [animate],
+}
+
+export default config

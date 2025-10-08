@@ -6,18 +6,25 @@ import Callout from "@/components/mdx/Callout"
 import { Steps, Step } from "@/components/mdx/Steps"
 import type { MDXComponents } from "mdx/types"
 
-type Props = {
+type MdxProps = {
   code: string
   components?: MDXComponents
 }
 
-const mdxComponents = { OGPreview, Callout, Steps, Step }
+const baseComponents: MDXComponents = {
+  OGPreview,
+  Callout,
+  Steps,
+  Step,
+}
 
-export default function Mdx({ code, components}: Props) {
+export default function Mdx({ code, components }: MdxProps) {
   const Component = useMDXComponent(code)
+  const merged = { ...baseComponents, ...components }
+
   return (
     <div className="prose prose-invert max-w-none">
-      <Component components={mdxComponents as any} />
+      <Component components={merged} />
     </div>
   )
 }

@@ -2,9 +2,19 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
+import Image from "next/image"
 
-// Beispiel-Daten (wenn du Contentlayer nutzt, werden diese automatisch ersetzt)
-const projects = [
+type ProjectLite = {
+  title: string
+  slug: string
+  summary: string
+  tags: string[]
+  cover?: string
+  featured?: boolean
+}
+
+// Beispiel-Daten (wenn du später Contentlayer nutzt, einfach ersetzen)
+const projects: ProjectLite[] = [
   {
     title: "Workmate – HR/Backoffice Toolkit",
     slug: "workmate",
@@ -37,11 +47,11 @@ const projects = [
 export default function ProjectsPage() {
   const [q, setQ] = useState("")
 
-  const filtered = useMemo(() => {
-    const query = q.toLowerCase()
+  const filtered = useMemo<ProjectLite[]>(() => {
+    const query = q.toLowerCase().trim()
+    if (!query) return projects
     return projects.filter(
       (p) =>
-        !query ||
         p.title.toLowerCase().includes(query) ||
         p.tags.some((t) => t.toLowerCase().includes(query))
     )
@@ -49,8 +59,8 @@ export default function ProjectsPage() {
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-20">
-      <h1 className="text-4xl font-bold mb-6">Projekte</h1>
-      <p className="text-white/70 mb-8 max-w-2xl">
+      <h1 className="mb-6 text-4xl font-bold">Projekte</h1>
+      <p className="mb-8 max-w-2xl text-white/70">
         Von Backoffice-Tools bis Podcasts & Reisen – meine Projekte zeigen, dass
         IT mehr sein kann als nur Technik. ⚡
       </p>
@@ -63,6 +73,7 @@ export default function ProjectsPage() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent,#ff9100)]"
+          aria-label="Projekte durchsuchen"
         />
       </div>
 
@@ -72,22 +83,26 @@ export default function ProjectsPage() {
           <Link
             key={p.slug}
             href={`/projects/${p.slug}`}
-            className="group flex flex-col rounded-2xl border border-white/10 bg-white/5 overflow-hidden hover:border-[var(--accent,#ff9100)] transition"
+            className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition hover:border-[var(--accent,#ff9100)]"
           >
             {p.cover && (
               <div className="aspect-video w-full overflow-hidden">
-                <img
+                <Image
                   src={p.cover}
                   alt={p.title}
+                  width={1200}
+                  height={675}
+                  sizes="(max-width: 1024px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  priority={false}
                 />
               </div>
             )}
-            <div className="flex-1 p-5 flex flex-col">
+            <div className="flex flex-1 flex-col p-5">
               <h2 className="text-lg font-semibold group-hover:text-[var(--accent,#ff9100)]">
                 {p.title}
               </h2>
-              <p className="mt-2 text-sm text-white/80 flex-1">{p.summary}</p>
+              <p className="mt-2 flex-1 text-sm text-white/80">{p.summary}</p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {p.tags.map((t) => (
                   <span
