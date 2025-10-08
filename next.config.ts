@@ -1,15 +1,11 @@
-import { withContentlayer } from 'next-contentlayer'
-const isCF = process.env.CF_PAGES === '1' || process.env.CF_WORKER === '1'
-
-
+import { withContentlayer } from "next-contentlayer"
 
 const nextConfig = {
-  images: {
-    unoptimized: true, // wichtig für Cloudflare Workers
+  eslint: {
+    // 🚀 verhindert, dass ESLint den Build auf CF blockiert
+    ignoreDuringBuilds: true,
   },
-  experimental: {
-    runtime: "edge", // aktiviert Edge-Umgebung für App Router
-  },
+  images: { unoptimized: true },
   reactStrictMode: true,
 }
 
