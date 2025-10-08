@@ -4,6 +4,9 @@ import { allProjects, type Project } from ".contentlayer/generated"
 import { buildMetadata } from "@/lib/seo"
 import Mdx from "@/components/mdx/Mdx"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function generateMetadata({
   params,
 }: {
