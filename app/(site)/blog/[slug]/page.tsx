@@ -4,6 +4,9 @@ import Mdx from "@/components/mdx/Mdx"
 import PostOG from "@/components/mdx/PostOG"
 import ShareBar from "@/components/ui/ShareBar"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function PostPage({
   params,
 }: {
