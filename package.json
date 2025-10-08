@@ -4,11 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "NEXT_DISABLE_TURBOPACK=1 next dev",
-    "build": "pnpm contentlayer || true && next-on-pages",
+    "build": "pnpm prebuild && next build",
+    "prebuild": "pnpm contentlayer",
+    "deploy": "pnpm prebuild && next-on-pages",
     "contentlayer": "contentlayer build",
     "start": "next start",
     "lint": "eslint"
-  },
+  }
+,
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
     "@radix-ui/react-avatar": "^1.1.10",
