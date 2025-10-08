@@ -1,5 +1,6 @@
 // components/cards/BlogCard.tsx
 import Link from "next/link"
+import Image from "next/image"
 
 type PostLike = {
   slug: string
@@ -29,12 +30,13 @@ export default function BlogCard(props: Props) {
       {/* Cover */}
       <div className="relative aspect-[16/9] bg-black/20">
         {/* img statt next/image, damit es auch bei extern/platzhalter easy ist */}
-        <img
-          src={coverSrc}
-          alt={title}
-          loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-        />
+       <Image
+        src={coverSrc || "/images/placeholder-project.svg"}
+        alt={title}
+        width={800}
+        height={400}
+        className="h-40 w-full object-cover rounded-t-xl"
+      />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
       </div>
 

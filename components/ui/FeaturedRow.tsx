@@ -1,8 +1,13 @@
 import Link from "next/link"
 import ProjectCard from "@/components/cards/ProjectCard"
-import { allProjects } from ".contentlayer/generated"
+import { allProjects, Project } from ".contentlayer/generated"
 
-export default function FeaturedRow() {
+type Props = {
+  items: Project[]
+  title?: string
+}
+
+export default function FeaturedRow( {items, title }: Props) {
   const featured = allProjects.filter(p => p.featured).sort((a,b)=>+new Date(b.date)-+new Date(a.date)).slice(0,3)
 
   return (

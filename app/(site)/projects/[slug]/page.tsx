@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { allProjects } from ".contentlayer/generated"
+import { allProjects,Project} from ".contentlayer/generated"
 import { buildMetadata } from "@/lib/seo"
 import Mdx from "@/components/mdx/Mdx"
+type PageProps = { params: { slug: string } }
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -19,10 +20,9 @@ export async function generateMetadata(
 }
 
 export default async function ProjectPage(
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: PageProps
 ) {
-  const { slug } = await params
-  const project = allProjects.find(p => p.slug === slug)
+  const project: Project | undefined = allProjects.find(p => p.slug === params.slug)
   if (!project) return notFound()
 
   return (

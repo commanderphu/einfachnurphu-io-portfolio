@@ -1,7 +1,10 @@
 import Image from "next/image"
 import Link from "next/link"
+import type { Project } from ".contentlayer/generated"
 
-export default function ProjectCard({ project }: { project: any }) {
+type Props = { project: Project }
+
+export default function ProjectCard({ project }: Props) {
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] transition-transform hover:-translate-y-1 will-change-transform ring-soft">
       {/* Cover */}

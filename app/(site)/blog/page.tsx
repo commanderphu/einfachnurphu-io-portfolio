@@ -1,15 +1,15 @@
 import BlogHero from "@/components/blog/BlogHero"
 import PostsFilter from "@/components/blog/PostsFilter"
-import { allPosts } from ".contentlayer/generated"
+import { allPosts, Post} from ".contentlayer/generated"
 import Reveal from "@/components/ui/Reveal"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
 export default function BlogIndex() {
-  const posts = [...allPosts]
+  const posts: Post[] = allPosts
     .filter(p => p.published !== false)
-    .sort((a,b)=>+new Date(b.date)-+new Date(a.date))
+    .sort((a,b)=> +new Date(b.date) - +new Date(a.date))
 
   return (
     <section className="k-section">

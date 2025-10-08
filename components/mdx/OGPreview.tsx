@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 type Props = {
   title: string
   subtitle?: string
@@ -12,7 +14,7 @@ export default function OGPreview({ title, subtitle, className }: Props) {
   return (
     <figure className={className ?? "my-6"}>
       {/* Kein next/image absichtlich: OG ist bereits 1200x630 und kommt aus einer API */}
-      <img
+      <Image
         src={src}
         alt={`OG Preview – ${title}`}
         className="w-full rounded-xl border border-white/10"

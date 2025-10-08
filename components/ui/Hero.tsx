@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { motion } from "framer-motion"
+import Link from "next/link"
 
 const SUBLINES = [
   "The Flash of IT — fast, precise, unstoppable.",
@@ -107,24 +108,17 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: .45, duration: .5 }}
         >
-          <a
-            href="/projects"
-            className="rounded-2xl bg-[var(--accent,#ff9100)] px-5 py-3 font-medium text-black hover:brightness-110"
-          >
+      
+          <Link href="/projects" className="rounded-2xl bg-[var(--accent,#ff9100)] px-5 py-3 font-medium text-black hover:brightness-110">
             Projekte ansehen
-          </a>
-          <a
-            href="/contact"
-            className="rounded-2xl border border-white/20 px-5 py-3 font-medium text-white/80 hover:bg-white/5"
-          >
+          </Link>
+          <Link href="/contact" className="rounded-2xl border border-white/20 px-5 py-3 font-medium text-white/80 hover:bg-white/5">
             Kontakt aufnehmen
-          </a>
-          <a
-            href="/about"
-            className="rounded-2xl px-4 py-3 font-medium text-white/70 hover:text-white"
-          >
+          </Link>
+          <Link href="/about" className="rounded-2xl px-4 py-3 font-medium text-white/70 hover:text-white">
             Über mich
-          </a>
+          </Link>
+
         </motion.div>
       </div>
 
