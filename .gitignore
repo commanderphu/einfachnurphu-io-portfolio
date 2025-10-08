@@ -46,3 +46,5 @@ next-env.d.ts
 .contentlayer.d.ts.map
 .contentlayer.mjs
 .contentlayer.cjs
+
+.linterror.txt

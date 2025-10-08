@@ -7,8 +7,7 @@
     "contentlayer": "contentlayer build",
     "prebuild": "pnpm contentlayer || true",
     "build": "pnpm prebuild && next build",
-    "deploy": "pnpm prebuild && next-on-pages",
-    "start": "next start",
+    "deploy": "pnpm prebuild && next-on-pages build",   
     "lint": "eslint"
   },
   "dependencies": {
