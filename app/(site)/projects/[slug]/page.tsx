@@ -4,18 +4,14 @@ import { allProjects, type Project } from ".contentlayer/generated"
 import { buildMetadata } from "@/lib/seo"
 import Mdx from "@/components/mdx/Mdx"
 
-type PageProps = {
-  params: {
-    slug: string
-  }
-}
-
-export async function generateMetadata(
-  { params }: PageProps
-): Promise<Metadata> {
+// ⬇️ generateMetadata kann synchron bleiben mit sync-params:
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
   const project = allProjects.find((p) => p.slug === params.slug)
   if (!project) return {}
-
   return buildMetadata({
     title: project.title,
     description: project.summary ?? "",
@@ -24,10 +20,14 @@ export async function generateMetadata(
   })
 }
 
-export default function ProjectPage({ params }: PageProps) {
-  const project: Project | undefined = allProjects.find(
-    (p) => p.slug === params.slug
-  )
+// ⬇️ Seite selbst: params als Promise entpacken
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const project: Project | undefined = allProjects.find((p) => p.slug === slug)
   if (!project) return notFound()
 
   return (
@@ -40,8 +40,6 @@ export default function ProjectPage({ params }: PageProps) {
           day: "2-digit",
         })}
       </p>
-
-      {/* Inhalt */}
       <Mdx code={project.body.code} />
     </article>
   )
