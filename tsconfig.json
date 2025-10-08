@@ -17,7 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["node", ".contentlayer/generated"],
+    "types": ["node"],
     "plugins": [
       {
         "name": "next"

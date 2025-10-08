@@ -1,4 +1,5 @@
 import { withContentlayer } from "next-contentlayer"
+import { runtime } from "./app/api/og/route"
 
 const nextConfig = {
   eslint: {
@@ -7,6 +8,7 @@ const nextConfig = {
   },
   images: { unoptimized: true },
   reactStrictMode: true,
+  experimental:{runtime:"edge"}
 }
 
 export default withContentlayer(nextConfig)
