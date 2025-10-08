@@ -1,36 +1,56 @@
-// app/feed.xml/route.ts
 export const runtime = 'edge'
 
 import { allPosts } from '.contentlayer/generated'
-import { buildRss } from '@/lib/rss'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://einfachnurphu.io' // setz das passend
-const TITLE = 'Phu – Blog'
-const DESCRIPTION = 'Artikel von Phu'
+function esc(s: string) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
 
 export async function GET() {
-  // Sortiere nach Datum, neu zuerst
-  const items = [...allPosts]
+  const siteUrl = 'https://einfachnurphu.io'
+
+  // nur veröffentlichte Posts, nach Datum sortiert
+  const posts = allPosts
+    .filter((p) => p.published !== false)
     .sort((a, b) => +new Date(b.date) - +new Date(a.date))
-    .map((p) => ({
-      title: p.title,
-      link: `${SITE_URL}/blog/${p.slug}`,
-      description: p.description ?? p.summary ?? '',
-      pubDate: p.date,
-      guid: p.slug,
-    }))
 
-  const xml = buildRss({
-    title: TITLE,
-    description: DESCRIPTION,
-    siteUrl: SITE_URL,
-    items,
-    language: 'de-DE',
-  })
+  const items = posts
+    .map((p) => {
+      const link = `${siteUrl}${p.url}`
+      const pubDate = new Date(p.date).toUTCString()
+      const title = esc(p.title)
+      const description = esc(p.summary ?? '')
+      return `
+        <item>
+          <title>${title}</title>
+          <link>${link}</link>
+          <guid>${link}</guid>
+          <pubDate>${pubDate}</pubDate>
+          <description>${description}</description>
+        </item>`
+    })
+    .join('')
 
-  return new Response(xml, {
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  <rss version="2.0">
+    <channel>
+      <title>Blog – einfachnurphu.io</title>
+      <link>${siteUrl}</link>
+      <description>Neueste Blogposts von Joshua Phu</description>
+      <language>de-DE</language>
+      <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+      ${items}
+    </channel>
+  </rss>`
+
+  return new Response(xml.trim(), {
     headers: {
-      'content-type': 'application/xml; charset=utf-8',
+      'content-type': 'application/rss+xml; charset=utf-8',
       'cache-control': 'public, max-age=300, s-maxage=300, stale-while-revalidate=86400',
     },
   })
