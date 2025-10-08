@@ -4,7 +4,6 @@ import Mdx from "@/components/mdx/Mdx"
 import PostOG from "@/components/mdx/PostOG"
 import ShareBar from "@/components/ui/ShareBar"
 
-// ⬇️ params kommt hier als Promise – deshalb async + await
 export default async function PostPage({
   params,
 }: {
@@ -35,12 +34,13 @@ export function generateStaticParams() {
   return allPosts.map((p) => ({ slug: p.slug }))
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const post = allPosts.find((p) => p.slug === params.slug)
+  const { slug } = await params
+  const post = allPosts.find((p) => p.slug === slug)
   if (!post) return {}
   return {
     title: post.title,

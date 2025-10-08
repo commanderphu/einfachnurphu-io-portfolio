@@ -4,13 +4,13 @@ import { allProjects, type Project } from ".contentlayer/generated"
 import { buildMetadata } from "@/lib/seo"
 import Mdx from "@/components/mdx/Mdx"
 
-// ⬇️ generateMetadata kann synchron bleiben mit sync-params:
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const project = allProjects.find((p) => p.slug === params.slug)
+  const { slug } = await params
+  const project = allProjects.find((p) => p.slug === slug)
   if (!project) return {}
   return buildMetadata({
     title: project.title,
@@ -20,7 +20,6 @@ export async function generateMetadata({
   })
 }
 
-// ⬇️ Seite selbst: params als Promise entpacken
 export default async function ProjectPage({
   params,
 }: {
