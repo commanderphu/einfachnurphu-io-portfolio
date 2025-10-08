@@ -1,6 +1,8 @@
 // app/(site)/layout.tsx
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
+export const runtime = 'edge'
+
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (

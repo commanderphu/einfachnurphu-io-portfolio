@@ -1,5 +1,7 @@
 import { SITE } from "@/lib/site"
 import { allPosts } from ".contentlayer/generated"
+export const runtime = 'edge'
+
 
 export async function GET() {
   const items = allPosts
