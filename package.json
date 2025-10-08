@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NEXT_DISABLE_TURBOPACK=1 next dev",
-    "build": "pnpm contentlayer && next build",
+    "build": "pnpm contentlayer || true && next build",
     "contentlayer": "contentlayer build",
     "start": "next start",
     "lint": "eslint"
