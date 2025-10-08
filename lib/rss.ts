@@ -1,26 +1,62 @@
-import RSS from "rss"
-import { allPosts } from ".contentlayer/generated"
+// lib/rss.ts
+type RssItem = {
+  title: string
+  link: string
+  description?: string
+  pubDate?: string | Date
+  guid?: string
+}
 
-export async function generateRss() {
-  const feed = new RSS({
-    title: "einfachnurphu – Blog",
-    site_url: "https://einfachnurphu.io",
-    feed_url: "https://einfachnurphu.io/feed.xml",
-    description: "Clean IT. Flash speed.",
-    language: "de",
-  })
+function esc(s: string) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
 
-  allPosts
-    .filter(p => p.published)
-    .sort((a,b)=>+new Date(b.date)-+new Date(a.date))
-    .forEach(p => {
-      feed.item({
-        title: p.title,
-        url: `https://einfachnurphu.io/blog/${p.slug}`,
-        date: p.date,
-        description: p.summary ?? "",
-      })
+export function buildRss({
+  title,
+  description,
+  siteUrl,
+  items,
+  language = 'de-DE',
+}: {
+  title: string
+  description?: string
+  siteUrl: string
+  items: RssItem[]
+  language?: string
+}) {
+  const now = new Date().toUTCString()
+
+  const itemsXml = items
+    .map((it) => {
+      const pub = it.pubDate
+        ? new Date(it.pubDate).toUTCString()
+        : undefined
+      const guid = it.guid ?? it.link
+      return `
+        <item>
+          <title>${esc(it.title)}</title>
+          <link>${esc(it.link)}</link>
+          ${it.description ? `<description>${esc(it.description)}</description>` : ''}
+          ${pub ? `<pubDate>${pub}</pubDate>` : ''}
+          <guid>${esc(guid)}</guid>
+        </item>`
     })
+    .join('')
 
-  return feed.xml({ indent: true })
+  return `<?xml version="1.0" encoding="UTF-8" ?>
+  <rss version="2.0">
+    <channel>
+      <title>${esc(title)}</title>
+      <link>${esc(siteUrl)}</link>
+      ${description ? `<description>${esc(description)}</description>` : ''}
+      <language>${esc(language)}</language>
+      <lastBuildDate>${now}</lastBuildDate>
+      ${itemsXml}
+    </channel>
+  </rss>`
 }

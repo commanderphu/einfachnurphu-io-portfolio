@@ -1,33 +1,37 @@
-import { SITE } from "@/lib/site"
-import { allPosts } from ".contentlayer/generated"
+// app/feed.xml/route.ts
 export const runtime = 'edge'
 
+import { allPosts } from '.contentlayer/generated'
+import { buildRss } from '@/lib/rss'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://einfachnurphu.io' // setz das passend
+const TITLE = 'Phu – Blog'
+const DESCRIPTION = 'Artikel von Phu'
 
 export async function GET() {
-  const items = allPosts
-    .filter(p => p.published !== false)
-    .sort((a,b)=> +new Date(b.date) - +new Date(a.date))
-    .map(p => {
-      const url = `${SITE.url}${p.url}`
-      return `
-  <item>
-    <title><![CDATA[${p.title}]]></title>
-    <link>${url}</link>
-    <guid>${url}</guid>
-    <pubDate>${new Date(p.date).toUTCString()}</pubDate>
-    <description><![CDATA[${p.summary || ""}]]></description>
-  </item>`
-    })
-    .join("")
+  // Sortiere nach Datum, neu zuerst
+  const items = [...allPosts]
+    .sort((a, b) => +new Date(b.date) - +new Date(a.date))
+    .map((p) => ({
+      title: p.title,
+      link: `${SITE_URL}/blog/${p.slug}`,
+      description: p.description ?? p.summary ?? '',
+      pubDate: p.date,
+      guid: p.slug,
+    }))
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-<channel>
-  <title><![CDATA[${SITE.title}]]></title>
-  <link>${SITE.url}</link>
-  <description><![CDATA[${SITE.description}]]></description>
-  ${items}
-</channel>
-</rss>`
-  return new Response(xml, { headers: { "Content-Type": "application/xml; charset=utf-8" } })
+  const xml = buildRss({
+    title: TITLE,
+    description: DESCRIPTION,
+    siteUrl: SITE_URL,
+    items,
+    language: 'de-DE',
+  })
+
+  return new Response(xml, {
+    headers: {
+      'content-type': 'application/xml; charset=utf-8',
+      'cache-control': 'public, max-age=300, s-maxage=300, stale-while-revalidate=86400',
+    },
+  })
 }
