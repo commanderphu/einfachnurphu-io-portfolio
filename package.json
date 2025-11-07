@@ -7,7 +7,7 @@
     "contentlayer": "contentlayer build",
     "prebuild": "pnpm contentlayer || true",
     "build": "pnpm prebuild && next build",
-    "deploy": "pnpm prebuild && next-on-pages",   
+    "deploy": "pnpm build",
     "lint": "eslint"
   },
   "dependencies": {
@@ -27,8 +27,8 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@eslint/eslintrc": "^3",
+    "@opennextjs/cloudflare": "^1.11.1",
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.13",
     "@types/node": "^20",
