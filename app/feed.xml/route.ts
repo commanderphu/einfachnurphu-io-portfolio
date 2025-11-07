@@ -1,5 +1,4 @@
-export const runtime = 'edge'
-
+export const runtime = "nodejs"; 
 import { allPosts } from '.contentlayer/generated'
 
 function esc(s: string) {
