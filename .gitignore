@@ -48,3 +48,6 @@ next-env.d.ts
 .contentlayer.cjs
 
 .linterror.txt
+.velite
+
+.pnpm-store/

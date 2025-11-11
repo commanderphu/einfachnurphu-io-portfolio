@@ -1,30 +1,28 @@
-"use client"
+'use client'
 
-import { useMDXComponent } from "next-contentlayer/hooks"
-import OGPreview from "@/components/mdx/OGPreview"
-import Callout from "@/components/mdx/Callout"
-import { Steps, Step } from "@/components/mdx/Steps"
-import type { MDXComponents } from "mdx/types"
+import { ComponentPropsWithoutRef } from 'react'
+import * as runtime from 'react/jsx-runtime'
+import Callout from './Callout'
+import Image from 'next/image'
 
-type MdxProps = {
-  code: string
-  components?: MDXComponents
-}
-
-const baseComponents: MDXComponents = {
-  OGPreview,
+const components = {
   Callout,
-  Steps,
-  Step,
+  Image: (props: ComponentPropsWithoutRef<typeof Image>) => (
+    <Image {...props} className="rounded-lg my-6" alt={props.alt || ''} />
+  ),
 }
 
-export default function Mdx({ code, components }: MdxProps) {
-  const Component = useMDXComponent(code)
-  const merged = { ...baseComponents, ...components }
-
-  return (
-    <div className="prose prose-invert max-w-none">
-      <Component components={merged} />
-    </div>
-  )
+interface MdxProps {
+  body: string
 }
+
+export function Mdx({ body }: MdxProps) {
+  // Velite kompiliert zu einem Function der JSX Runtime als arguments[0] erwartet
+  // eslint-disable-next-line no-new-func
+  const getMDXComponent = new Function(body)
+  const { default: Component } = getMDXComponent(runtime)
+
+  return <Component components={components} />
+}
+
+export default Mdx

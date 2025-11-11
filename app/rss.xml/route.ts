@@ -1,57 +1,33 @@
-export const runtime = "nodejs"; 
-
-import { allPosts } from '.contentlayer/generated'
-
-function esc(s: string) {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;')
-}
+import { posts } from '#site/content'
+import RSS from 'rss'
 
 export async function GET() {
-  const siteUrl = 'https://einfachnurphu.io'
+  const feed = new RSS({
+    title: 'einfachnurphu - Blog',
+    description: 'Developer, Designer & Content Creator',
+    feed_url: 'https://einfachnurphu.de/rss.xml',
+    site_url: 'https://einfachnurphu.de',
+    language: 'de',
+    pubDate: new Date()
+  })
 
-  // nur veröffentlichte Posts, nach Datum sortiert
-  const posts = allPosts
+  posts
     .filter((p) => p.published !== false)
     .sort((a, b) => +new Date(b.date) - +new Date(a.date))
-
-  const items = posts
-    .map((p) => {
-      const link = `${siteUrl}${p.url}`
-      const pubDate = new Date(p.date).toUTCString()
-      const title = esc(p.title)
-      const description = esc(p.summary ?? '')
-      return `
-        <item>
-          <title>${title}</title>
-          <link>${link}</link>
-          <guid>${link}</guid>
-          <pubDate>${pubDate}</pubDate>
-          <description>${description}</description>
-        </item>`
+    .slice(0, 20)
+    .forEach((p) => {
+      feed.item({
+        title: p.title,
+        description: p.summary ?? '',
+        url: `https://einfachnurphu.de${p.url}`,
+        date: new Date(p.date),
+        categories: p.tags ?? []
+      })
     })
-    .join('')
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-  <rss version="2.0">
-    <channel>
-      <title>Blog – einfachnurphu.io</title>
-      <link>${siteUrl}</link>
-      <description>Neueste Blogposts von Joshua Phu</description>
-      <language>de-DE</language>
-      <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-      ${items}
-    </channel>
-  </rss>`
-
-  return new Response(xml.trim(), {
+  return new Response(feed.xml(), {
     headers: {
-      'content-type': 'application/rss+xml; charset=utf-8',
-      'cache-control': 'public, max-age=300, s-maxage=300, stale-while-revalidate=86400',
-    },
+      'Content-Type': 'application/xml; charset=utf-8'
+    }
   })
 }

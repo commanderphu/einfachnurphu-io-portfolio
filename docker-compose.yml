@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+    container_name: einfachnurphu-portfolio
+    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - node_modules_cache:/app/node_modules
+      - next_cache:/app/.next            # ✅ Next.js Build Cache
+    working_dir: /app
+    command: pnpm dev
+    expose:
+      - "3000"
+    networks:
+      - core_network
+    restart: unless-stopped
+
+volumes:
+  node_modules_cache:
+  velite_cache:     # ✅ Neues Volume für Velite
+  next_cache:       # ✅ Next.js Cache Volume
+
+networks:
+  core_network:
+    external: true

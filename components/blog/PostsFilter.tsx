@@ -2,30 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react"
 import BlogCard from "../cards/BlogCard"
+import { posts } from "#site/content"
 
-type Post = {
-  _id: string
-  slug: string
-  title: string
-  summary?: string
-  url?: string
-  date: string | Date
-  cover?: string
-  tags?: string[]
-}
+// Type aus Velite ableiten
+type Post = typeof posts[number]
 
 export default function PostsFilter({ posts }: { posts: Post[] }) {
   const [rawQ, setRawQ] = useState("")
-  const [q, setQ] = useState("")                 // debounced query
+  const [q, setQ] = useState("")
   const [active, setActive] = useState<string | null>(null)
 
-  // debounce: 180ms
   useEffect(() => {
     const t = setTimeout(() => setQ(rawQ.trim().toLowerCase()), 180)
     return () => clearTimeout(t)
   }, [rawQ])
 
-  // Tag-Liste + Counts
   const { allTags, tagCount } = useMemo(() => {
     const map = new Map<string, number>()
     for (const p of posts) for (const t of p.tags ?? []) map.set(t, (map.get(t) ?? 0) + 1)
@@ -33,7 +24,6 @@ export default function PostsFilter({ posts }: { posts: Post[] }) {
     return { allTags: tags, tagCount: (tag: string) => map.get(tag) ?? 0 }
   }, [posts])
 
-  // Filter-Logik
   const filtered = useMemo(() => {
     if (!q && !active) return posts
     return posts.filter((p) => {
@@ -52,7 +42,6 @@ export default function PostsFilter({ posts }: { posts: Post[] }) {
 
   return (
     <div className="space-y-4">
-      {/* Controls */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:max-w-md">
           <input
@@ -91,20 +80,20 @@ export default function PostsFilter({ posts }: { posts: Post[] }) {
         </div>
       </div>
 
-      {/* Grid */}
       <div className="k-grid">
         {filtered.length === 0 ? (
           <EmptyState query={rawQ} />
         ) : (
           filtered.map((p) => (
             <BlogCard
-              key={p._id || p.slug}
+              key={p.slug}
               slug={p.slug}
               title={p.title}
               summary={p.summary ?? ""}
               date={p.date}
               tags={p.tags}
               cover={p.cover}
+              url={p.url}              
             />
           ))
         )}
@@ -112,8 +101,6 @@ export default function PostsFilter({ posts }: { posts: Post[] }) {
     </div>
   )
 }
-
-/* ——— Kleine Hilfs-Komponenten ——— */
 
 function FilterChip({
   active,
@@ -146,7 +133,7 @@ function EmptyState({ query }: { query: string }) {
       <div>
         {query ? (
           <>
-            Für „<span className="text-[var(--accent)]">{query}</span>“ wurde nichts gefunden.
+            Für „<span className="text-[var(--accent)]">{query}</span>" wurde nichts gefunden.
           </>
         ) : (
           <>Keine Beiträge vorhanden.</>

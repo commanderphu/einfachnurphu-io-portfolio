@@ -1,25 +1,39 @@
-import { SITE } from "@/lib/site"
-import { allPosts, allProjects } from ".contentlayer/generated"
+import { posts, projects } from '#site/content'
 
-export async function GET() {
-  const staticUrls = [
-    "", "/projects", "/blog", "/about", "/timeline"
-  ].map(path => urlTag(`${SITE.url}${path}`, new Date()))
-
-  const projectUrls = allProjects.map(p =>
-    urlTag(`${SITE.url}${p.url}`, new Date(p.date))
-  )
-  const postUrls = allPosts
-    .filter(p => p.published !== false)
-    .map(p => urlTag(`${SITE.url}${p.url}`, new Date(p.date)))
-
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${[...staticUrls, ...projectUrls, ...postUrls].join("\n")}
-</urlset>`
-  return new Response(xml, { headers: { "Content-Type": "application/xml; charset=utf-8" } })
+const SITE = {
+  url: 'https://einfachnurphu.de'
 }
 
-function urlTag(loc: string, lastmod?: Date) {
-  return `<url><loc>${loc}</loc>${lastmod ? `<lastmod>${lastmod.toISOString()}</lastmod>` : ""}</url>`
+export async function GET() {
+  const urlTag = (url: string, date: Date) => `
+  <url>
+    <loc>${url}</loc>
+    <lastmod>${date.toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`
+
+  const projectUrls = projects.map((p) =>
+    urlTag(`${SITE.url}${p.url}`, new Date(p.date))
+  ).join('')
+
+  const postUrls = posts
+    .filter((p) => p.published !== false)
+    .map((p) => urlTag(`${SITE.url}${p.url}`, new Date(p.date)))
+    .join('')
+
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${urlTag(SITE.url, new Date())}
+  ${urlTag(`${SITE.url}/blog`, new Date())}
+  ${urlTag(`${SITE.url}/projects`, new Date())}
+  ${postUrls}
+  ${projectUrls}
+</urlset>`
+
+  return new Response(sitemap, {
+    headers: {
+      'Content-Type': 'application/xml; charset=utf-8'
+    }
+  })
 }

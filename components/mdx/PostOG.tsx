@@ -1,4 +1,5 @@
 import Image from "next/image"
+
 type Props = { title: string; cover?: string | null; className?: string }
 
 function pickOg(title: string, cover?: string | null) {
@@ -11,9 +12,18 @@ function pickOg(title: string, cover?: string | null) {
 
 export default function PostOG({ title, cover, className }: Props) {
   const src = pickOg(title, cover ?? undefined)
+  const isOgRoute = src.startsWith('/api/og')
+  
   return (
     <figure className={className ?? "my-6"}>
-      <Image src={src} alt={`Preview – ${title}`} className="w-full rounded-xl border border-white/10" />
+      <Image 
+        src={src} 
+        alt={`Preview – ${title}`}
+        width={1200}
+        height={630}
+        className="w-full rounded-xl border border-white/10"
+        unoptimized={isOgRoute}  // ← Wichtig für /api/og routes
+      />
       <figcaption className="mt-2 text-sm text-white/60">Share-Preview</figcaption>
     </figure>
   )

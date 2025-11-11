@@ -1,6 +1,9 @@
 import Link from "next/link"
 import ProjectCard from "@/components/cards/ProjectCard"
-import { allProjects, type Project } from ".contentlayer/generated"
+import { projects } from "#site/content"
+
+// Type aus Velite ableiten
+type Project = typeof projects[number]
 
 type FeaturedRowProps = {
   /** Optional: eigene Items übergeben */
@@ -18,7 +21,7 @@ export default function FeaturedRow({
 }: FeaturedRowProps) {
   const featured: Project[] =
     items ??
-    allProjects
+    projects
       .filter((p) => p.featured)
       .sort((a, b) => +new Date(b.date) - +new Date(a.date))
       .slice(0, limit)
@@ -36,13 +39,11 @@ export default function FeaturedRow({
           Alle Projekte →
         </Link>
       </div>
-
       <div className="k-grid">
         {featured.map((p) => (
-          <ProjectCard key={p._id} project={p} />
+          <ProjectCard key={p.slug} project={p} />
         ))}
       </div>
     </section>
   )
 }
-``

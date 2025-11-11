@@ -1,27 +1,11 @@
-import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { allProjects, type Project } from ".contentlayer/generated"
-import { buildMetadata } from "@/lib/seo"
-import Mdx from "@/components/mdx/Mdx"
+import { projects } from "#site/content"
+import { Mdx } from "@/components/mdx/Mdx"  // ✅ Named import
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
-  const project = allProjects.find((p) => p.slug === slug)
-  if (!project) return {}
-  return buildMetadata({
-    title: project.title,
-    description: project.summary ?? "",
-    cover: project.cover,
-    slug: `/projects/${project.slug}`,
-  })
-}
+type Project = typeof projects[number]
 
 export default async function ProjectPage({
   params,
@@ -29,24 +13,46 @@ export default async function ProjectPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const project: Project | undefined = allProjects.find((p) => p.slug === slug)
-  if (!project) return notFound()
+  const project: Project | undefined = projects.find((p) => p.slug === slug)
+
+  if (!project) {
+    return notFound()
+  }
 
   return (
-    <article className="prose prose-invert mx-auto pb-20 px-4">
-      <h1 className="mb-2 text-3xl font-bold">{project.title}</h1>
-      <p className="text-sm text-white/60">
-        {new Date(project.date).toLocaleDateString("de-DE", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        })}
-      </p>
-      <Mdx code={project.body.code} />
+    <article className="relative mx-auto max-w-3xl px-6 py-16">
+      <header className="mb-10">
+        <h1 className="text-4xl font-bold text-white mb-3 leading-tight">
+          {project.title}
+        </h1>
+        {project.summary && (
+          <p className="text-lg text-white/70">{project.summary}</p>
+        )}
+      </header>
+
+      <div className="mdx-content">
+        <Mdx body={project.body} />
+      </div>
     </article>
   )
 }
 
 export function generateStaticParams() {
-  return allProjects.map((p) => ({ slug: p.slug }))
+  return projects.map((p) => ({ slug: p.slug }))
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const project = projects.find((p) => p.slug === slug)
+
+  if (!project) return {}
+
+  return {
+    title: project.title,
+    description: project.summary ?? "",
+  }
 }
