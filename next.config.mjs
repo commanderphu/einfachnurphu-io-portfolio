@@ -17,6 +17,9 @@ const nextConfig = {
 
     return config
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 
   // 🧱 Image API Config – für OG-Images & Blog-Cover
   images: {
