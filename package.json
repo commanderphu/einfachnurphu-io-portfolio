@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "velite": "velite build",
-    "prebuild": "velite build && pnpm gupdate:og",
+    "prebuild": "velite build && pnpm update:og",
     "build": "next build",
     "start": "next start",
     "deploy": "pnpm build && npx @opennextjs/cloudflare build",
