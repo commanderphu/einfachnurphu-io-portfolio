@@ -1,69 +1,135 @@
-import { ImageResponse } from "next/og";
+// app/api/og/route.tsx
+import { ImageResponse } from "next/og"
 
-// ✅ Umstellen auf nodejs oder Zeile ganz entfernen
-export const runtime = "nodejs";  
+export const runtime = "edge"
+export const size = { width: 1200, height: 630 }
+export const contentType = "image/png"
 
-async function loadFontFromPublic(req: Request) {
+// 🔤 Font nur einmal laden (funktioniert auch bei Edge Deployments)
+async function loadFont() {
   try {
-    const origin = new URL(req.url).origin;
-    const fontUrl = `${origin}/fonts/JetBrainsMono-Bold.ttf`;
-    const res = await fetch(fontUrl, { cache: "force-cache" });
-    if (!res.ok) return null;
-    const ct = res.headers.get("content-type") || "";
-    if (!/font|octet-stream/.test(ct)) return null;
-    return await res.arrayBuffer();
+    const fontUrl = new URL(
+      "../../../public/fonts/JetBrainsMono-Bold.ttf",
+      import.meta.url
+    )
+    const res = await fetch(fontUrl)
+    if (!res.ok) throw new Error("Font not found")
+    return await res.arrayBuffer()
   } catch {
-    return null;
+    return null
   }
 }
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const title = searchParams.get("title") || "einfachnurphu.io";
-  const subtitle = searchParams.get("subtitle") || "";
+  const { searchParams } = new URL(req.url)
+  const title = searchParams.get("title") || "einfachnurphu.io"
+  const subtitle = searchParams.get("subtitle") || ""
+  const icon = searchParams.get("icon") || "🦊"
 
-  const fontData = await loadFontFromPublic(req);
+  const fontData = await loadFont()
 
   return new ImageResponse(
     (
-      <div style={{
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        background: "#0e0e0f",
-        padding: 48,
-        position: "relative",
-      }}>
-        <div style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(800px 300px at 10% -10%, rgba(255,145,0,0.25), transparent 60%), radial-gradient(700px 260px at 90% 0%, rgba(255,145,0,0.12), transparent 60%)",
-        }} />
-        <div style={{ fontSize: 64, fontWeight: 800, color: "white" }}>{title}</div>
-        {subtitle && (
-          <div style={{ fontSize: 36, color: "rgba(255,255,255,.8)" }}>{subtitle}</div>
-        )}
-        <div style={{
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "space-between",
-          color: "white",
-          fontSize: 28,
-          opacity: 0.85,
-        }}>
-          <span>Joshua Phu Bein</span>
-          <span style={{ color: "#ff9100" }}>einfachnurphu.io</span>
+          backgroundColor: "#0e0e0f",
+          padding: "64px 72px",
+          fontFamily: "JetBrains Mono, monospace",
+          position: "relative",
+        }}
+      >
+        {/* 🌌 Hintergrund-Glow */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(800px 300px at 10% -10%, rgba(255,145,0,0.22), transparent 70%), radial-gradient(900px 360px at 90% 20%, rgba(255,145,0,0.10), transparent 70%)",
+          }}
+        />
+
+        {/* 🎯 Icon */}
+        <div
+          style={{
+            fontSize: 80,
+            color: "#ff9100",
+            marginBottom: 16,
+            zIndex: 10, // ✅ kein px
+            textShadow: "0 0 25px rgba(255,145,0,0.25)",
+          }}
+        >
+          {icon}
+        </div>
+
+        {/* 🧡 Titel */}
+        <div
+          style={{
+            fontSize: 72,
+            fontWeight: 800,
+            lineHeight: 1.1,
+            color: "#f0f0f0",
+            zIndex: 10,
+            maxWidth: "90%",
+            textShadow: "0 0 25px rgba(255,145,0,0.15)",
+          }}
+        >
+          {title}
+        </div>
+
+        {/* 🩶 Untertitel */}
+        {subtitle && (
+          <div
+            style={{
+              fontSize: 40,
+              color: "rgba(255,255,255,0.75)",
+              marginTop: 8,
+              zIndex: 10,
+              maxWidth: "80%",
+            }}
+          >
+            {subtitle}
+          </div>
+        )}
+
+        {/* 🦊 Footer */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            color: "#e6e6e6",
+            fontSize: 28,
+            letterSpacing: 0.5,
+            opacity: 0.85,
+            zIndex: 10,
+            marginTop: "auto",
+            borderTop: "2px solid rgba(255,255,255,0.05)",
+            paddingTop: 24,
+          }}
+        >
+          <span style={{ fontWeight: 500 }}>Joshua Phu</span>
+          <span style={{ color: "#ff9100", fontWeight: 700 }}>einfachnurphu.io</span>
         </div>
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
+      width: size.width,
+      height: size.height,
       fonts: fontData
-        ? [{ name: "JetBrains Mono", data: fontData, style: "normal", weight: 700 }]
+        ? [
+            {
+              name: "JetBrains Mono",
+              data: fontData,
+              style: "normal",
+              weight: 700,
+            },
+          ]
         : [],
     }
-  );
+  )
 }

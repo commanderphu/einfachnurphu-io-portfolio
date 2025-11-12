@@ -12,28 +12,29 @@ export default function PostsFilter({ posts }: { posts: Post[] }) {
   const [q, setQ] = useState("")
   const [active, setActive] = useState<string | null>(null)
 
+  // Debounce-Suche
   useEffect(() => {
     const t = setTimeout(() => setQ(rawQ.trim().toLowerCase()), 180)
     return () => clearTimeout(t)
   }, [rawQ])
 
+  // Alle Tags + Count berechnen
   const { allTags, tagCount } = useMemo(() => {
     const map = new Map<string, number>()
-    for (const p of posts) for (const t of p.tags ?? []) map.set(t, (map.get(t) ?? 0) + 1)
+    for (const p of posts) {
+      for (const t of p.tags ?? []) map.set(t, (map.get(t) ?? 0) + 1)
+    }
     const tags = [...map.keys()].sort((a, b) => a.localeCompare(b))
     return { allTags: tags, tagCount: (tag: string) => map.get(tag) ?? 0 }
   }, [posts])
 
+  // Gefilterte Posts berechnen
   const filtered = useMemo(() => {
     if (!q && !active) return posts
     return posts.filter((p) => {
       const inTag = !active || (p.tags ?? []).includes(active)
       if (!q) return inTag
-      const hay = [
-        p.title,
-        p.summary ?? "",
-        ...(p.tags ?? []),
-      ]
+      const hay = [p.title, p.summary ?? "", ...(p.tags ?? [])]
         .join(" ")
         .toLowerCase()
       return inTag && hay.includes(q)
@@ -42,6 +43,7 @@ export default function PostsFilter({ posts }: { posts: Post[] }) {
 
   return (
     <div className="space-y-4">
+      {/* 🔍 Suchfeld + Tags */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:max-w-md">
           <input
@@ -80,20 +82,21 @@ export default function PostsFilter({ posts }: { posts: Post[] }) {
         </div>
       </div>
 
+      {/* 🧱 Grid mit BlogCards */}
       <div className="k-grid">
         {filtered.length === 0 ? (
           <EmptyState query={rawQ} />
         ) : (
           filtered.map((p) => (
             <BlogCard
-              key={p.slug}
-              slug={p.slug}
+              key={`${p.year ?? "x"}-${p.month ?? "x"}-${p.slug ?? "draft"}`}
+              slug={p.slug ?? ""}
               title={p.title}
               summary={p.summary ?? ""}
               date={p.date}
               tags={p.tags}
               cover={p.cover}
-              url={p.url}              
+              url={p.url}
             />
           ))
         )}

@@ -4,9 +4,11 @@ import { ComponentPropsWithoutRef } from 'react'
 import * as runtime from 'react/jsx-runtime'
 import Callout from './Callout'
 import Image from 'next/image'
+import Embed from './Embed'
 
 const components = {
   Callout,
+  Embed,
   Image: (props: ComponentPropsWithoutRef<typeof Image>) => (
     <Image {...props} className="rounded-lg my-6" alt={props.alt || ''} />
   ),

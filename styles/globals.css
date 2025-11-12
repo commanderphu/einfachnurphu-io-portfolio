@@ -195,6 +195,9 @@ pre {
     z-index: -1;
   }
 }
+.breadcrumb-glow {
+  text-shadow: 0 0 8px rgba(255, 145, 0, 0.4);
+}
 
 /* ============================================
    📝 MDX Content Styling
@@ -473,6 +476,88 @@ pre {
 .callout-success {
   border-color: var(--success);
   background: color-mix(in oklab, var(--success) 10%, transparent);
+}
+/* ============================================
+/* ============================================
+   🎬 Universal Embed Cards (MDX Embeds)
+   ============================================ */
+
+.mdx-content .embed-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: color-mix(in oklab, white 5%, var(--card));
+  border: 1px solid var(--border);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.mdx-content .embed-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(255, 145, 0, 0.25);
+}
+
+/* Media inside (iframe, blockquote, etc.) */
+.mdx-content .embed-card iframe,
+.mdx-content .embed-card blockquote {
+  width: 100%;
+  max-width: 640px;
+  border: none;
+  background: transparent;
+}
+
+/* Instagram spezifisch */
+.mdx-content .embed-card blockquote.instagram-media {
+  margin: 0 !important;
+  border: none !important;
+  background: #fafafa !important; /* hell lassen für Lesbarkeit */
+}
+
+/* Optional: Placeholder Text */
+.mdx-content .embed-placeholder {
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-align: center;
+  padding: 1rem;
+}
+/* ============================================
+   🏷️ Embed Captions & Wrapper
+   ============================================ */
+
+.mdx-content .embed-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 2rem 0;
+}
+
+.mdx-content .embed-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: color-mix(in oklab, white 5%, var(--card));
+  border: 1px solid var(--border);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.mdx-content .embed-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(255, 145, 0, 0.25);
+}
+
+.mdx-content .embed-caption {
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--muted);
+  text-align: center;
+  max-width: 42rem;
 }
 
 /* ============================================
