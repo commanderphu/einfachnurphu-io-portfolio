@@ -2,21 +2,18 @@
   "name": "einfachnurphu-portfolio",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "velite": "velite build",
-    "prebuild": "velite build && pnpm update:og",
-    "build": "next build",
-    "start": "next start",
-    "deploy": "pnpm build && npx @opennextjs/cloudflare build",
-    "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "new-post": "tsx scripts/new-post.ts",
-    "generate:og": "node --experimental-specifier-resolution=node scripts/generate-og.mjs",
-    "update:og": "tsx scripts/update-og.ts",
-    "clean:og": "tsx scripts/clean-og.ts",
-    "refresh:content": "pnpm generate:og && pnpm velite"
-  },
+  "type": "module",
+ "scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "deploy": "pnpm build && npx @opennextjs/cloudflare build",
+  "blog": "tsx scripts/blog.ts",
+  "velite": "velite build",
+  "refresh:content": "pnpm blog update",
+  "lint": "next lint",
+  "type-check": "tsc --noEmit"
+},
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
     "@radix-ui/react-avatar": "^1.1.10",
