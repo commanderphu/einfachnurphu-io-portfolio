@@ -79,7 +79,7 @@ export function enrichPostMeta(filePath: string, data: Record<string, unknown>):
 }
 
 export function getAllPosts(): PostMeta[] {
-  const postsDir = path.join(process.cwd(), "content", "posts")
+  const postsDir = path.join(process.cwd(), "content", "blog")
   const files = fs.existsSync(postsDir)
     ? fs.readdirSync(postsDir).filter((f) => f.endsWith(".mdx"))
     : []
@@ -97,7 +97,7 @@ export function getAllPosts(): PostMeta[] {
 }
 
 export function getPostBySlug(slug: string): PostMeta | null {
-  const filePath = path.join(process.cwd(), "content", "posts", `${slug}.mdx`)
+  const filePath = path.join(process.cwd(), "content", "blog", `${slug}.mdx`)
   if (!fs.existsSync(filePath)) return null
   const source = fs.readFileSync(filePath, "utf8")
   const { data } = matter(source)

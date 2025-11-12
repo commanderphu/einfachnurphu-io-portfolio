@@ -14,7 +14,8 @@
     "new-post": "tsx scripts/new-post.ts",
     "generate:og": "node --experimental-specifier-resolution=node scripts/generate-og.mjs",
     "update:og": "tsx scripts/update-og.ts",
-    "clean:og": "tsx scripts/clean-og.ts"
+    "clean:og": "tsx scripts/clean-og.ts",
+    "refresh:content": "pnpm generate:og && pnpm velite"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
