@@ -266,6 +266,10 @@ switch (command) {
   pnpm blog create "Titel"   → neuen Post anlegen (+ OG + Velite)
   pnpm blog update           → OGs aktualisieren & Velite rebuild
   pnpm blog clean [--force]  → ungenutzte OG-Dateien löschen
+  pnpm blog list             → alle Blogposts auflisten
+  pnpm blog publish <slug>   → Post veröffentlichen
+  pnpm blog draft <slug>     → Post wieder als Draft markieren
+  pnpm blog edit <slug>      → Post in VSCode öffnen
 `)
     break
 }

@@ -7,10 +7,11 @@ Hier findest du alles, was mich antreibt: IT, Design, Open Source und ehrliche P
 ---
 
 ## 🚀 Tech Stack
-- **Framework:** Next.js + TypeScript  
+- **Framework:** Next.js (App Router) + TypeScript  
 - **Styling:** TailwindCSS + Catppuccin Frappe Theme  
-- **Content:** MDX + Contentlayer  
-- **Deployment:** Vercel / Unraid (Dev)  
+- **Content:** Velite + MDX  
+- **Deployment:** Vercel (Main) / Unraid (Dev)  
+- **Tools:** PNPM · ESLint FlatConfig · Blog CLI · OG Image API  
 - **Designfarben:**  
   - Hintergrund: `#232223`  
   - Akzent: `#ff9100`  
@@ -26,10 +27,10 @@ Hier findest du alles, was mich antreibt: IT, Design, Open Source und ehrliche P
 | `/app/(site)/about` | Über mich + Profilbild |
 | `/app/(site)/timeline` | Werdegang & Flash-Story |
 | `/app/(site)/projects` | Workmate · Nerdcast · TravelTune |
-| `/app/(site)/blog` | MDX-basierte Blogposts |
-| `/app/(site)/resume` | Online-Lebenslauf + PDF-Download |
-| `/app/(site)/contact` | Kontaktformular + Impressum |
-| `/components/ui/Footer.tsx` | Terminal-inspirierter Footer |
+| `/app/(site)/blog` | MDX-basierte Blogposts (Velite Content) |
+| `/app/api/og` | Dynamische OG-Bilder (Next.js ImageResponse) |
+| `/components/mdx` | Custom-Komponenten für Posts |
+| `/scripts/blog.ts` | CLI für Post-Erstellung, OG-Update & Cleanup |
 | `/public/images` | Logos, Profilbilder, Projekt-Covers |
 
 ---
@@ -54,12 +55,30 @@ Keine Cloud-Abhängigkeit, kein Vendor-Lock-in – nur saubere IT mit Haltung.
 
 ---
 
+## 🧠 Blog CLI – Phase 1–3
+
+Ein zentrales Tool für deinen gesamten Content-Workflow:  
+Erstellt, verwaltet und bereinigt Blogposts inklusive OG-Images & Velite-Builds.
+
+### Befehle
+| Command | Beschreibung |
+|----------|---------------|
+| `pnpm blog create "Titel"` | Neuen Post anlegen (+ OG-Image + Velite Build) |
+| `pnpm blog update` | OG-Images neu generieren & Velite rebuild |
+| `pnpm blog list` | Alle Posts anzeigen (inkl. Status) |
+| `pnpm blog publish <slug>` | Post auf „veröffentlicht“ setzen |
+| `pnpm blog clean [--force]` | Ungenutzte OG-Dateien entfernen |
+
+✨ Unterstützt automatisches OG-Fallback, dynamische Blog-Covers und Vercel-kompatible Deployments.
+
+---
+
 ## 📸 Visual Identity
 
 - **Logo (K.I.T. Solutions):** Skyline + Text „KIT IT KOBLENZ“  
 - **Brandfarben:** Dunkelgrau `#232223`, Akzent `#ff9100`, Weiß  
 - **Theme:** Catppuccin Frappe Green  
-- **Profilbild:** `/public/images/joshua-phu.jpg` (rund, abgedunkelt, Orange-Glow)  
+- **Profilbild:** `/public/images/joshua-phu.jpg` (rund, abgedunkelt, Orange-Glow)
 
 ---
 
@@ -67,11 +86,13 @@ Keine Cloud-Abhängigkeit, kein Vendor-Lock-in – nur saubere IT mit Haltung.
 
 - [x] Hero + Branding  
 - [x] About + Timeline  
-- [x] Projects + Blog  
+- [x] Projects + Blog (Velite Migration)  
 - [x] Resume + Contact + Footer  
-- [ ] Canvas-Export für PDF-Lebenslauf  
+- [x] Blog CLI Workflow (create/update/list/publish/clean)  
+- [ ] Live Preview für Drafts (`pnpm blog preview`)  
+- [ ] CLI-Flags für Cover, Tags & Summary  
+- [ ] Integration in (Workmate)-Dashboard  
 - [ ] SEO-Meta & Social-Preview-Images  
-- [ ] Erweiterung für n8n / RSS-Automation  
 
 ---
 
@@ -82,29 +103,37 @@ Keine Cloud-Abhängigkeit, kein Vendor-Lock-in – nur saubere IT mit Haltung.
 pnpm install
 
 # Lokaler Start
-pnpm run dev
+pnpm dev
 
-# Build
-pnpm run build
-```
+# Build (Vercel/Prod)
+pnpm build
 
-Content:
-MDX-Dateien liegen unter /content/blog & /content/projects.
-Neue Einträge einfach als .mdx hinzufügen – Contentlayer macht den Rest.
+# Blog-Workflow
+pnpm blog create "Mein neuer Artikel"
+pnpm blog update
+pnpm blog clean --force
+````
 
-📜 Lizenz
-Dieses Projekt ist Teil meiner persönlichen Marke Joshua Phu / K.I.T. Solutions.
-Inhalte dürfen mit Quellenangabe genutzt werden, Code-Snippets unter MIT-Lizenz.
+🗂 **Content:**
+MDX-Dateien liegen unter `/content/blog/YYYY/MM/slug.mdx`.
+Velite generiert automatisch Index & Metadaten.
 
-⚡ Autor
-Joshua Phu Bein
-K.I.T. Solutions · einfachnurphu.io
-IT-Supporter · Developer · Nerd · Flash-Fan
-
-yaml
-Code kopieren
+OG-Images werden über `/app/api/og` erstellt
+und lokal unter `/public/og/*.webp` gespeichert.
 
 ---
 
-Willst du, dass ich dir zusätzlich noch eine **englische README-Version** erstelle  
-(z. B. für GitHub international)?
+## 📜 Lizenz
+
+Dieses Projekt ist Teil der persönlichen Marke **Joshua Phu / K.I.T. Solutions**.
+
+* Inhalte dürfen mit Quellenangabe genutzt werden.
+* Code-Snippets unter **MIT-Lizenz**.
+
+---
+
+## ⚡ Autor
+
+**Joshua Phu Bein**
+K.I.T. Solutions · einfachnurphu.io
+IT-Supporter · Developer · Nerd · Flash-Fan
