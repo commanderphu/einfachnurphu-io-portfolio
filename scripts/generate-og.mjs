@@ -6,7 +6,11 @@ import fetch from "node-fetch"
 
 const postsDir = path.join(process.cwd(), "content", "blog")
 const outDir = path.join(process.cwd(), "public", "og")
-const apiUrl = "http://localhost:3000/api/og"
+const apiUrl =
+  process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}/api/og`
+    : "http://localhost:3000/api/og"
+
 
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true })
 
