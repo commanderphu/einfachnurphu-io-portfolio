@@ -1,32 +1,30 @@
-// app/api/og/route.tsx
-import { ImageResponse } from "next/og"
+import { ImageResponse } from "next/og";
 
-export const runtime = "edge"
-export const size = { width: 1200, height: 630 }
-export const contentType = "image/png"
+export const runtime = "edge";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
 
-// 🔤 Font nur einmal laden (funktioniert auch bei Edge Deployments)
 async function loadFont() {
   try {
     const fontUrl = new URL(
       "../../../public/fonts/JetBrainsMono-Bold.ttf",
       import.meta.url
-    )
-    const res = await fetch(fontUrl)
-    if (!res.ok) throw new Error("Font not found")
-    return await res.arrayBuffer()
+    );
+    const res = await fetch(fontUrl);
+    if (!res.ok) throw new Error("Font not found");
+    return await res.arrayBuffer();
   } catch {
-    return null
+    return null;
   }
 }
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const title = searchParams.get("title") || "einfachnurphu.io"
-  const subtitle = searchParams.get("subtitle") || ""
-  const icon = searchParams.get("icon") || "🦊"
+  const { searchParams } = new URL(req.url);
+  const title = searchParams.get("title") || "einfachnurphu.io";
+  const subtitle = searchParams.get("subtitle") || "";
+  const icon = searchParams.get("icon") || "🦊";
 
-  const fontData = await loadFont()
+  const fontData = await loadFont();
 
   return new ImageResponse(
     (
@@ -43,7 +41,6 @@ export async function GET(req: Request) {
           position: "relative",
         }}
       >
-        {/* 🌌 Hintergrund-Glow */}
         <div
           style={{
             position: "absolute",
@@ -53,20 +50,18 @@ export async function GET(req: Request) {
           }}
         />
 
-        {/* 🎯 Icon */}
         <div
           style={{
             fontSize: 80,
             color: "#ff9100",
             marginBottom: 16,
-            zIndex: 10, // ✅ kein px
+            zIndex: 10,
             textShadow: "0 0 25px rgba(255,145,0,0.25)",
           }}
         >
           {icon}
         </div>
 
-        {/* 🧡 Titel */}
         <div
           style={{
             fontSize: 72,
@@ -81,8 +76,7 @@ export async function GET(req: Request) {
           {title}
         </div>
 
-        {/* 🩶 Untertitel */}
-        {subtitle && (
+        {subtitle ? (
           <div
             style={{
               fontSize: 40,
@@ -94,9 +88,8 @@ export async function GET(req: Request) {
           >
             {subtitle}
           </div>
-        )}
+        ) : null}
 
-        {/* 🦊 Footer */}
         <div
           style={{
             display: "flex",
@@ -131,5 +124,5 @@ export async function GET(req: Request) {
           ]
         : [],
     }
-  )
+  );
 }
