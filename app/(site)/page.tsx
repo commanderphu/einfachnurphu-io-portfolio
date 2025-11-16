@@ -50,7 +50,6 @@ export default function HomePage() {
                 tags={post.tags}
                 cover={post.cover}
                 url={post.url}
-                readingTime={post.readingTime}
               />
             ))}
           </div>

@@ -1,9 +1,11 @@
+// app/api/og/route.tsx
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// Font laden wie vorher – dein Originalstil
 async function loadFont() {
   try {
     const fontUrl = new URL(
@@ -106,7 +108,9 @@ export async function GET(req: Request) {
           }}
         >
           <span style={{ fontWeight: 500 }}>Joshua Phu</span>
-          <span style={{ color: "#ff9100", fontWeight: 700 }}>einfachnurphu.io</span>
+          <span style={{ color: "#ff9100", fontWeight: 700 }}>
+            einfachnurphu.io
+          </span>
         </div>
       </div>
     ),
