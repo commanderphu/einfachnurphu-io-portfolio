@@ -14,7 +14,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "generate:og": "tsx scripts/generate-og.ts",
-    "update:og": "pnpm generate:og",
+    "update:og": "pnpm generate:og"
     },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
