@@ -1,96 +1,108 @@
-#!/usr/bin/env node
+#!/usr/bin/env tsx
 /**
  * 🎨 Automatische OG-Image-Generierung
  * -------------------------------------
  * Lokal:   rendert über http://localhost:3000/api/og
- * Vercel:  wird übersprungen (API nicht verfügbar während Build)
- *
- * ✨ Usage:
- *   pnpm generate:og
+ * Vercel:  wird übersprungen (API während des Builds nicht verfügbar)
  */
 
-import fs from "fs"
-import path from "path"
-import matter from "gray-matter"
-import fetch from "node-fetch"
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import fetch from "node-fetch";
 
 // === CONFIG =================================================================
-const postsDir = path.join(process.cwd(), "content/posts")
-const outDir = path.join(process.cwd(), "public/og")
 
-// Dynamisch je nach Umgebung
-const apiUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}/api/og`
-  : "http://localhost:3000/api/og"
+// neue Blogstruktur: content/blog/YYYY/MM/*.mdx
+const postsDir = path.join(process.cwd(), "content/blog");
+const outDir = path.join(process.cwd(), "public/og");
 
-// === SAFETY GUARD ===========================================================
-// 🧱 Vercel Build darf OGs nicht generieren – API ist zu diesem Zeitpunkt offline.
+// Lokale Render-API
+const apiUrl = "http://localhost:3000/api/og";
+
+// === SAFETY GUARD (Vercel Build) ===========================================
+
 if (process.env.VERCEL) {
-  console.log("⚠️  Überspringe OG-Generation auf Vercel (API nicht verfügbar während Build).")
-  process.exit(0)
+  console.log("⚠️  Überspringe OG-Generation auf Vercel (API nicht verfügbar während Build).");
+  process.exit(0);
 }
 
-// === HELPER =================================================================
-async function generateImage(title, subtitle, icon, slug) {
-  const params = new URLSearchParams({ title })
-  if (subtitle) params.set("subtitle", subtitle)
-  if (icon) params.set("icon", icon)
+// === HELPERS ================================================================
+
+function findMdxFiles(dir: string): string[] {
+  if (!fs.existsSync(dir)) return [];
+
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const filePath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) return findMdxFiles(filePath);
+    if (entry.isFile() && filePath.endsWith(".mdx")) return [filePath];
+
+    return [];
+  });
+}
+
+async function generateOGImage({ slug, title, subtitle, icon }: any) {
+  const params = new URLSearchParams({ title });
+
+  if (subtitle) params.set("subtitle", subtitle);
+  if (icon) params.set("icon", icon);
+
+  const url = `${apiUrl}?${params.toString()}`;
 
   try {
-    const res = await fetch(`${apiUrl}?${params.toString()}`)
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
 
-    const buffer = Buffer.from(await res.arrayBuffer())
-    const outPath = path.join(outDir, `${slug}.webp`)
-    fs.writeFileSync(outPath, buffer)
-    console.log(`✅  OG Image erzeugt: ${slug}.webp`)
-  } catch (err) {
-    console.error(`⚠️  Fehler bei ${slug}: ${err.message}`)
+    const buffer = Buffer.from(await res.arrayBuffer());
+    const outPath = path.join(outDir, `${slug}.webp`);
+
+    fs.writeFileSync(outPath, buffer);
+    console.log(`✅ OG Bild erzeugt: ${slug}.webp`);
+  } catch (err: any) {
+    console.error(`⚠️ Fehler bei ${slug}:`, err.message);
   }
 }
 
 // === MAIN ===================================================================
+
 async function main() {
-  console.log("🎨 OG Image Generation gestartet…")
+  console.log("🎨 OG-Image-Generierung gestartet…");
 
-  if (!fs.existsSync(postsDir)) {
-    console.error("❌ Kein content/posts-Verzeichnis gefunden.")
-    process.exit(1)
-  }
+  // Prepare output dir
+  fs.mkdirSync(outDir, { recursive: true });
 
-  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true })
+  const files = findMdxFiles(postsDir);
 
-  const files = fs.readdirSync(postsDir).filter((f) => f.endsWith(".mdx"))
   if (files.length === 0) {
-    console.log("ℹ️  Keine Blogposts gefunden.")
-    return
+    console.log("ℹ️  Keine Blogposts gefunden.");
+    return;
   }
 
   for (const file of files) {
-    const filePath = path.join(postsDir, file)
-    const content = fs.readFileSync(filePath, "utf8")
-    const { data } = matter(content)
-    const slug = file.replace(/\.mdx$/, "")
+    const content = fs.readFileSync(file, "utf8");
+    const { data } = matter(content);
+    const slug = path.basename(file, ".mdx");
 
-    // Wenn OG bereits existiert → überspringen
-    const outPath = path.join(outDir, `${slug}.webp`)
+    // Wenn OG existiert → Skip
+    const outPath = path.join(outDir, `${slug}.webp`);
     if (fs.existsSync(outPath)) {
-      console.log(`⚪  Überspringe (bereits vorhanden): ${slug}`)
-      continue
+      console.log(`⚪ Überspringe (OG existiert): ${slug}`);
+      continue;
     }
 
-    const title = data.title || slug
-    const subtitle = data.summary || ""
-    const icon = data.icon || "📝"
-
-    await generateImage(title, subtitle, icon, slug)
+    await generateOGImage({
+      slug,
+      title: data.title || slug,
+      subtitle: data.summary || "",
+      icon: data.icon || "📝",
+    });
   }
 
-  console.log("✨  OG Image Generation abgeschlossen.")
+  console.log("✨ OG-Generierung abgeschlossen.");
 }
 
-// === RUN ====================================================================
 main().catch((err) => {
-  console.error("🚨 Unerwarteter Fehler:", err)
-  process.exit(1)
-})
+  console.error("🚨 Fehler:", err);
+  process.exit(1);
+});

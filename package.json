@@ -12,8 +12,10 @@
     "velite": "velite build",
     "refresh:content": "pnpm blog update",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
-  },
+    "type-check": "tsc --noEmit",
+    "generate:og": "tsx scripts/generate-og.ts",
+    "update:og": "pnpm generate:og",
+    },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
     "@radix-ui/react-avatar": "^1.1.10",
