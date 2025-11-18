@@ -12,7 +12,6 @@ services:
       - NODE_ENV=development
     volumes:
       - .:/app
-      - node_modules_cache:/app/node_modules
       - next_cache:/app/.next            # ✅ Next.js Build Cache
     working_dir: /app
     command: pnpm dev

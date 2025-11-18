@@ -1,27 +1,35 @@
 "use client";
-// app/(site)/contact/page.tsx
 import { useState } from "react";
 
 export default function ContactPage() {
-  const [status, setStatus] = useState("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const form = e.currentTarget;   // <-- SAFE COPY
+    const formData = new FormData(form);
+
     setStatus("loading");
 
     try {
-      const formData = new FormData(e.currentTarget);
-
       const res = await fetch("/api/contact", {
         method: "POST",
         body: formData,
+        cache: "no-store",
       });
 
-      if (!res.ok) throw new Error("Fehler");
+      const data = await res.json().catch(() => null);
 
-      e.currentTarget.reset();
+      if (!res.ok || !data?.success) {
+        setStatus("error");
+        return;
+      }
+
+      form.reset();   // <-- JETZT IST form DEFINIERT
       setStatus("success");
-    } catch {
+    } catch (err) {
+      console.error("DEBUG-CATCH", err);
       setStatus("error");
     }
   }
@@ -29,10 +37,6 @@ export default function ContactPage() {
   return (
     <section className="mx-auto max-w-3xl px-4 py-20 space-y-8">
       <h1 className="text-4xl font-bold tracking-tight">Kontakt</h1>
-
-      <p className="text-white/80">
-        Projektanfrage, Tech-Talk oder Support? Schreib mir kurz, ich melde mich flott zurück.
-      </p>
 
       {status === "success" && (
         <div className="rounded-xl bg-green-500/20 border border-green-400/30 p-4 text-green-200">
@@ -49,31 +53,17 @@ export default function ContactPage() {
       <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="mb-1 block text-sm text-white/60">Name</label>
-          <input
-            name="name"
-            required
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white"
-          />
+          <input name="name" required className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white" />
         </div>
 
         <div>
           <label className="mb-1 block text-sm text-white/60">E-Mail</label>
-          <input
-            type="email"
-            name="email"
-            required
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white"
-          />
+          <input type="email" name="email" required className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white" />
         </div>
 
         <div className="sm:col-span-2">
           <label className="mb-1 block text-sm text-white/60">Nachricht</label>
-          <textarea
-            name="message"
-            rows={5}
-            required
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white"
-          />
+          <textarea name="message" rows={5} required className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white" />
         </div>
 
         <div className="sm:col-span-2">
