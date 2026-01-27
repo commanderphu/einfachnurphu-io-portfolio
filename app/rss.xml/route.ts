@@ -26,7 +26,7 @@ export async function GET() {
     })
 
   const xml = feed.xml()
-  const stylesheet = '<?xml-stylesheet type="text/xsl" href="https://einfachnurphu.io/rss.xsl"?>'
+  const stylesheet = '<?xml-stylesheet type="text/xsl" href="https://www.einfachnurphu.io/rss.xsl"?>'
   const styledXml = xml.startsWith('<?xml')
     ? xml.replace('<?xml version="1.0" encoding="UTF-8"?>', `<?xml version="1.0" encoding="UTF-8"?>\n${stylesheet}\n`)
     : `${stylesheet}\n${xml}`
