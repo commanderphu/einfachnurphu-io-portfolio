@@ -13,6 +13,7 @@ import {
   faSpotify,
   faTiktok,
   faWebAwesome,
+  faMastodon,
 } from "@fortawesome/free-brands-svg-icons";
 
 // Solid Icons
@@ -72,6 +73,11 @@ export default function LinksPage() {
           name: "Instagram",
           url: "https://instagram.com/einfachnurphu",
           icon: faInstagram,
+        },
+        {
+          name: "Mastodon",
+          url: "https://mastodon.social/@einfachnurphu",
+          icon: faMastodon,
         },
         {
           name: "Twitch",
@@ -150,6 +156,14 @@ export default function LinksPage() {
             className="linktree-header-social-icon"
           >
             <FontAwesomeIcon icon={faTwitch} className="w-5 h-5" />
+          </a>
+          <a
+            href="https://mastodon.social/@einfachnurphu"
+            target="_blank"
+            rel="me noopener noreferrer"
+            className="linktree-header-social-icon"
+          >
+            <FontAwesomeIcon icon={faMastodon} className="w-5 h-5" />
           </a>
         </div>
       </div>
