@@ -26,9 +26,10 @@ export async function GET() {
     })
 
   const xml = feed.xml()
+  const stylesheet = '<?xml-stylesheet type="text/xsl" href="https://einfachnurphu.io/rss.xsl"?>'
   const styledXml = xml.startsWith('<?xml')
-    ? xml.replace('<?xml version="1.0" encoding="UTF-8"?>', '<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="/rss.xsl"?>')
-    : `<?xml-stylesheet type="text/xsl" href="/rss.xsl"?>\n${xml}`
+    ? xml.replace('<?xml version="1.0" encoding="UTF-8"?>', `<?xml version="1.0" encoding="UTF-8"?>\n${stylesheet}\n`)
+    : `${stylesheet}\n${xml}`
 
   return new Response(styledXml, {
     headers: {
