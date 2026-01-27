@@ -1,31 +1,58 @@
 ---
-title: "Workmate – HR/Backoffice Toolkit"
+title: "Workmate OS – Das modulare Betriebssystem für deinen Büroalltag"
 slug: "workmate"
-summary: "Ein Fullstack-Tool für Personalakten, Reminders, Abwesenheiten und Dokumente. Entwickelt mit FastAPI und PostgreSQL."
-tags: ["FastAPI", "PostgreSQL", "Vue", "React", "Docker"]
-repo: "https://github.com/CommanderPhu/workmate"
+summary: "Modulare Verwaltungsplattform für Personal, CRM, Projekte, Finanzen und mehr. Von kleinen Teams bis zu Organisationen – selbst-hostbar, datenschutzfreundlich und intuitiv."
+tags: ["FastAPI", "PostgreSQL", "Vue 3", "Docker", "Zitadel SSO", "TypeScript"]
+repo: "https://github.com/K-I-T-Solutions/workmate_os"
 date: 2025-09-15
 featured: true
 cover: "/images/workmate-cover.png"
 ---
 
+<Callout>**Status:** Phase 3 (80%) · SSO & Admin Panel live · Audit Log & System Settings in Arbeit</Callout>
 
-<Callout>**Status:** Aktive Entwicklung · Reminder-System & Dashboard live · Urlaubsanträge in Arbeit</Callout>
+**Workmate OS** ist eine modulare Verwaltungsplattform für alle organisatorischen Aufgaben.
+Von Personal über Kunden bis zu Tickets, Finanzen und Dokumentenverwaltung – alles läuft zentral, sicher und integriert.
 
-**Workmate** ist ein HR- und Backoffice-Tool, das Administration einfach und visuell macht.  
-Von Mitarbeiterverwaltung bis zu Reminder-Logik deckt es alle zentralen Abläufe im Unternehmensalltag ab.
+Ziel ist es, Verwaltungsarbeit **endlich einfach und modern** zu machen:
+✅ weniger Klicks, 🧩 mehr Übersicht, ⚡ maximale Performance.
 
-### 💡 Features
-- Mitarbeiterverwaltung mit ID-System (KIT-000XXX)  
-- Reminder-System mit Fälligkeitsstatus und Dashboard-Übersicht  
-- Abwesenheitsmanagement inkl. Kalender  
-- Dokumente-Upload & Zuordnung zu Mitarbeitern  
-- KPI-Visualisierung (z. B. Reminders nach Status, Abwesenheiten pro Monat)
+### 🧩 Module (Phase 1-3)
 
-### 🧱 Stack
-FastAPI · PostgreSQL · Vue/React · Docker · Traefik · Cloudflared  
-Deployment läuft auf meinem Unraid-Server „Gideon“.
+**Core & Backoffice (100% abgeschlossen):**
+- 👤 **Employees** – Mitarbeiter, Abteilungen, Rollen mit SSO-Integration
+- 📁 **Documents** – Dokumenten-Upload mit Checksum-Validierung
+- 🔔 **Reminders** – Erinnerungen mit polymorphen Verknüpfungen
+- 📊 **Dashboards** – Personalisierbare User-Dashboards
+- 💼 **CRM** – Customer & Contact Management mit Activity Tracking
+- 📁 **Projects** – Projekt-Management mit Budget-Tracking
+- 🧾 **Invoices** – Rechnungserstellung mit PDF-Generierung
+- 💰 **Finance** – Ausgaben-Management & Belege
+- 🕒 **Time Tracking** – Zeiterfassung mit billable/non-billable Hours
+- 💬 **Chat** – Messaging-System (in Development)
 
-### 🌱 Vision
-Ein skalierbares, modulares System, das sich in K.I.T. Solutions und andere Projekte integriert.  
-**Ziel:** Ein Open-Source-Backoffice, das Spaß macht.
+**SSO & Admin (80%):**
+- 🔐 **Zitadel SSO** – OAuth2/OIDC Integration
+- 🛡️ **Role Mapping** – Zitadel → Backend Role Sync
+- 🎯 **Wildcard Permissions** – Flexible Permission System
+- 🛠️ **Admin Panel** – 5 Admin-Seiten (Users, Depts, Roles, Audit, Settings)
+
+### 🧱 Tech-Stack
+**Frontend:** Vue 3 + TypeScript + Vite + Pinia
+**Backend:** FastAPI (Python 3.13) + SQLAlchemy 2.0 + PostgreSQL 16
+**Auth:** Zitadel SSO (OAuth2/OIDC) + JWT
+**Infrastructure:** Docker Compose + Nginx + Let's Encrypt SSL
+**CI/CD:** GitHub Actions (automatisches Deployment)
+
+### 🌐 Production
+- **Frontend:** [workmate.kit-it-koblenz.de](https://workmate.kit-it-koblenz.de)
+- **API:** [api.workmate.kit-it-koblenz.de](https://api.workmate.kit-it-koblenz.de)
+- **Dokumentation:** [k-i-t-solutions.github.io/workmate_os](https://k-i-t-solutions.github.io/workmate_os/)
+
+### 🌍 Vision
+Workmate OS ist Teil der **K.I.T. Solutions-Philosophie:**
+
+> *Ethische, offene und nachhaltige IT – für Menschen, nicht gegen sie.*
+
+Ein vollständig offenes, selbst-hostbares System für moderne Unternehmensverwaltung.
+Von kleinen Teams bis zu Organisationen, die Wert auf **Datenschutz, Effizienz und Ästhetik** legen.

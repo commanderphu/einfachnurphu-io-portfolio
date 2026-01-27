@@ -1,0 +1,457 @@
+---
+title: "Mein neues Setup: Vom Chaos zum produktiven Workspace"
+summary: "Die Geschichte meiner Workspace-Transformation: Von zusammengewürfelter Hardware zu einem durchdachten Homelab-System mit Dual-Monitor-Setup, headless Dev-Host und 23+ Docker-Services."
+date: "2026-01-16"
+published: false
+tags: ["homelab", "setup", "docker", "infrastructure", "workspace"]
+cover: "/images/blog/workspace-setup.png"
+---
+
+## Von improvisierten Lösungen zum durchdachten System
+
+Kennst du das Gefühl, wenn dein Setup über die Jahre organisch gewachsen ist, aber irgendwann merkst du: **Das kann so nicht weitergehen**? Genau da stand ich Ende 2025.
+
+Ein Windows-Notebook als Hauptrechner, ein alter Desktop-PC, der mal laufen durfte und mal nicht, Kabel-Chaos unter dem Schreibtisch, und Projekte verteilt auf verschiedenen Systemen. Jedes Mal, wenn ich an einem Projekt arbeiten wollte, musste ich erst überlegen: Wo läuft das nochmal? Welche IDE habe ich wo installiert? Ist der Service gerade up oder down?
+
+**Es war Zeit für einen Umbau.**
+
+---
+
+## Die Vision: Ein System, drei Rollen
+
+Meine Anforderungen waren klar:
+
+1. **Mobile Arbeitsstation** für Kunden, Remote-Arbeit und Flexibilität
+2. **Leistungsstarker Dev-Host** für Docker-Container, Builds und Services
+3. **Zentraler Storage** für Backups, Medien und Smart-Home
+
+Die Lösung? Ein **Drei-System-Setup** mit klaren Verantwortlichkeiten.
+
+---
+
+## Meet the Team: cisco, barry & gideon
+
+### 🖥️ cisco – Der headless Powerhouse
+
+**Hardware:**
+- Intel Core i7-4790 (8 Threads, 4.0 GHz)
+- 16 GB DDR3 RAM
+- NVIDIA GTX 1050 Ti
+- Crucial MX500 SSD (500 GB) + Seagate HDD (2 TB)
+
+**Rolle:** Headless Dev-Host & Homelab-Infrastruktur
+
+Cisco ist das Herzstück meines Setups. Ein Arch Linux-System **ohne Monitor, ohne Tastatur, ohne GUI** – nur pure Performance. Zugriff erfolgt ausschließlich über SSH und VS Code Remote.
+
+Hier laufen **23+ Docker-Container** im Produktivbetrieb:
+
+**Core-Services:**
+- **Caddy** – Reverse Proxy mit automatischem HTTPS (Cloudflare DNS Challenge)
+- **Keycloak** – Zentrales Identity Management (OAuth2/OIDC)
+- **PostgreSQL** – Shared Database für alle Services
+- **Cloudflared** – Sicherer Tunnel für externe Erreichbarkeit
+
+**Anwendungen:**
+- **Workmate OS** – Mein eigenes HR/Backoffice-Tool (FastAPI + Vue 3)
+- **N8N** – Workflow-Automatisierung
+- **Guacamole** – Clientless Remote Desktop
+- **Uptime Kuma** – Service-Monitoring (hinter OAuth2-Proxy)
+- **Mailpit** – SMTP-Testing für Entwicklung
+
+**Development:**
+- **Code Server** – VS Code im Browser (hinter OAuth2-Proxy)
+- **Pgweb** – PostgreSQL Web-UI
+- **Phu Dashboard** – Persönliches Monitoring-Dashboard
+- **Phu API Hub** – API-Aggregation für Twitch, Spotify, Musik
+
+**Media:**
+- **Navidrome** – Music-Streaming-Server
+- **Spotify Token Generator** – OAuth-Token-Handling
+
+Alle Services sind über ein zentrales `core_network` (172.19.0.0/16) miteinander verbunden und laufen stabil im 24/7-Betrieb.
+
+**Warum headless?**
+Keine Ressourcen-Verschwendung für GUI. Alle Rechenpower geht in Container und Services. Remote-Entwicklung über VS Code Remote SSH ist flüssiger als jede lokale IDE.
+
+---
+
+### 💻 barry – Die mobile Kommandozentrale
+
+**Hardware:**
+- Lenovo ThinkPad E14
+- Intel Core i5-10210U (8 Threads)
+- 16 GB DDR4 RAM
+- Crucial P3 Plus NVMe SSD (1 TB)
+- Windows 11 (geplante Migration zu Linux)
+
+**Rolle:** Frontend-Client & Remote-Workstation
+
+Barry ist mein Notebook – die **I/O-Ebene** des Setups. Alle Displays, Audio-Interfaces und Eingabegeräte laufen hier zusammen.
+
+**Das Dock-Setup:**
+- USB-C Dockingstation als zentraler Hub
+- **Dual-Monitor-Setup:** 2x AOC Displays (HDMI/DisplayPort)
+- **Audio Interface:** Yamaha Steinberg UR22 mk II (Studio-Interface für Recording & Monitoring)
+- Tastatur, Maus, Kopfhörer – alles über das Dock
+
+**Workflow:**
+Barry verbindet sich per SSH Remote Dev zu cisco. Ich entwickle im VS Code auf barry, aber **alle Backend-Services, Docker-Container und Builds laufen auf cisco**. Das gibt mir die Flexibilität, mit dem Notebook unterwegs zu arbeiten, während die schwere Last auf cisco bleibt.
+
+**Warum noch Windows?**
+Aktuell läuft noch Win11, aber die Migration zu Linux ist geplant – entweder auf diesem ThinkPad oder mit neuem Notebook. Bis dahin funktioniert SSH + VS Code Remote einwandfrei.
+
+---
+
+### 🗄️ gideon – Der stille Organisator
+
+**Hardware:**
+- AMD GX-222GC SOC
+- 16 GB RAM
+- Unraid 6.1.64
+
+**Rolle:** NAS, Medienserver & Smart-Home-Hub
+
+Gideon ist mein **Unraid-Server** – der zentrale Storage und Medien-Manager.
+
+**Services (Docker):**
+- **Jellyfin** – Medienserver für Filme, Serien & Musik
+- **Home Assistant** – Smart-Home-Zentrale mit Matter-Server
+- **Paperless-ngx** – Dokumentenmanagement & Archivierung
+- **Pi-hole** – Netzwerk-weiter Ad-Blocker & DNS
+- **Vaultwarden** – Selbst-gehosteter Passwort-Manager
+- **Wiki.js** – Dokumentation & Wissensdatenbank
+- **Cloudflared Tunnel** – Sichere externe Verbindung
+- **Fenrus** – Dashboard für alle Homelab-Services
+
+**Status:** Läuft seit **9 Tagen ohne Neustart** – stabil, leise, effizient.
+
+Gideon übernimmt alles, was mit **Organisation, Storage und Unterhaltung** zu tun hat. Backups von cisco und barry landen hier, Medien werden über Jellyfin gestreamt, und das gesamte Smart-Home läuft über Home Assistant.
+
+---
+
+## Die Netzwerk-Architektur
+
+```
+Internet
+    │
+    ├─── Cloudflare Tunnel (cisco + gideon)
+    │         │
+    │         └─── *.intern.phudevelopement.xyz
+    │
+    └─── Lokales Netzwerk (192.168.178.0/24)
+              │
+              ├─── cisco (192.168.178.100) - Dev-Host
+              │      └─── Docker: core_network (172.19.0.0/16)
+              │             ├─── Caddy Reverse Proxy (:80, :443)
+              │             ├─── Keycloak (SSO/OAuth2)
+              │             ├─── PostgreSQL (Shared DB)
+              │             ├─── Workmate Backend + UI
+              │             ├─── N8N, Guacamole, Code Server
+              │             └─── Uptime Kuma, Navidrome, ...
+              │
+              ├─── barry (192.168.178.xxx) - Workstation
+              │      └─── SSH Remote Dev → cisco
+              │
+              └─── gideon (192.168.178.99) - NAS
+                     └─── Docker: Jellyfin, Home Assistant, etc.
+```
+
+**Reverse Proxy:**
+Alle Services laufen hinter **Caddy** mit automatischem HTTPS (Let's Encrypt via Cloudflare DNS Challenge). Interne Domains nutzen `*.intern.phudevelopement.xyz`.
+
+**Authentifizierung:**
+Keycloak als zentraler **Identity Provider** (OAuth2/OIDC). Sensitive Services wie Uptime Kuma und Code Server sind zusätzlich hinter **OAuth2-Proxy** geschützt.
+
+---
+
+## Der Projekt-Workflow
+
+Eines der größten Verbesserungen: **Projekt-Navigation**.
+
+Früher musste ich mich durch Verzeichnisse hangeln. Heute:
+
+```bash
+# Projekt öffnen
+pj workmate    # → cd + automatisches Öffnen in tmux/vim
+
+# Fuzzy-Search durch alle Projekte
+proj           # → fzf-Interface für schnelle Auswahl
+
+# Jump to Project (zoxide)
+j workmate     # → Intelligenter cd-Sprung
+```
+
+**Projekt-Setup:**
+Neue Projekte werden mit `scripts/project-setup.sh` scaffolded:
+- FastAPI (Backend)
+- React/Vite (Frontend)
+- Vue/Vite (Alternative)
+
+Alle Projekte werden automatisch in `~/.config/projects` registriert und sind sofort über `pj` / `proj` erreichbar.
+
+---
+
+## Was hat sich verändert?
+
+### Vorher (Chaos):
+- Projekte auf verschiedenen Systemen verstreut
+- Services laufen mal hier, mal da
+- Keine zentrale Authentifizierung
+- Kein Monitoring
+- Manuelle SSL-Zertifikate
+- Kabel-Salat unter dem Schreibtisch
+
+### Nachher (System):
+- **Klare Rollen:** barry (Frontend), cisco (Backend), gideon (Storage)
+- **Zentrale Services:** Alles läuft auf cisco, erreichbar über Reverse Proxy
+- **SSO:** Ein Login für alle Services (Keycloak)
+- **Monitoring:** Uptime Kuma überwacht alle Services
+- **Automatisches HTTPS:** Caddy + Cloudflare DNS Challenge
+- **Sauberes Setup:** USB-C Dock als zentraler Hub, Dual-Monitor, Audio-Interface
+
+---
+
+## Die nächsten Schritte
+
+Die Umbau-Phase ist noch nicht abgeschlossen. Geplant sind:
+
+**Infrastruktur:**
+- [ ] VLANs einrichten (Main / IoT / Gäste)
+- [ ] OPNsense/pfSense Router für besseres Netzwerk-Management
+- [ ] Interne/externe DNS sauber trennen
+- [ ] Backup-Automatisierung via Syncthing & Borg
+
+**Entwicklung:**
+- [ ] barry auf Linux migrieren (Fedora/Arch)
+- [ ] Dotfiles-Repo vervollständigen
+- [ ] Ansible Playbooks für Workstation & Homelab
+- [ ] Projekt-Templates erweitern (Next.js, SvelteKit)
+
+**Business:**
+- [ ] Pitch Deck für K.I.T. Solutions finalisieren
+- [ ] Instagram Content-Plan umsetzen
+- [ ] Workmate OS öffentlich dokumentieren
+
+---
+
+## Geplante Hardware-Upgrades
+
+### gideon 2.0 – Der Medien-Powerhouse (Budget: ~400€)
+
+Aktuell läuft gideon auf einem **Fujitsu FUTRO S920** Thin Client – kompakt, aber limitiert:
+- AMD GX-222GC (2C/2T @ 2.2GHz) – zu schwach für Transcoding
+- Nur 1x intern verbaute HDD
+- Keine Hardware-Video-Beschleunigung
+- Medien liegen aktuell noch auf alter Synology DS218j (2018, langsam, 2x 3TB)
+
+**Das Problem:**
+Blu-ray-Streaming über Jellyfin = Software-Transcoding = CPU-Last = ruckelt bei mehreren Streams. Außerdem ist der Storage limitiert und über Netzwerk-Shares eingebunden (SMB-Latenz).
+
+**Die Lösung: Kompletter Hardware-Rebuild**
+
+**Neue Hardware:**
+- **Intel N100 Mainboard** (4C/4T, bis 3.4 GHz, TDP 6W)
+  - **Intel Quick Sync Video** – Hardware-Transcoding für H.264/H.265/VP9
+  - 6x SATA Ports onboard
+  - 4x 2.5G LAN (i226-V)
+  - 2x M.2 NVMe Slots
+  - Passmark Score: ~5000 (3x schneller als aktuell)
+
+- **16GB DDR5 RAM** (4800MHz SO-DIMM)
+
+- **JONSBO N4 Gehäuse** (6-Bay NAS Case)
+  - 6x 3.5" HDD Bays (4x Hot-Swap!)
+  - 2x 2.5" SSD Mounts
+  - Kompaktes Mini-ITX Design
+  - Walnussholz + Stahl-Optik
+
+- **SFX 300W Netzteil** (80+ Bronze)
+
+- **USB 3.0 Blu-ray Burner** (für MakeMKV Ripping)
+
+**Storage-Strategie:**
+```
+Parity Disk:  3TB HDD (Datenschutz)
+Disk 1:       3TB HDD (nutzbar)
+Cache Pool:   240GB + 119GB SSD
+→ Erweiterbar auf 6+ HDDs
+```
+
+**Was das bringt:**
+
+**Performance:**
+- 2-3x gleichzeitige 1080p Streams (Hardware-Transcoding)
+- 1x 4K Stream mit Transcoding
+- CPU-Last < 30% (statt 100%)
+
+**Kapazität:**
+- Alle Medien lokal (keine Netzwerk-Latenz mehr)
+- Hot-Swap HDDs (Platten tauschen ohne Shutdown)
+- Skalierbar auf 6+ HDDs (bis ~24TB mit Parity)
+
+**Workflow:**
+1. Blu-ray/DVD einlegen
+2. MakeMKV öffnen (http://192.168.178.99:5800)
+3. Automatisches Rippen nach `/mnt/user/media/movies/`
+4. Jellyfin scannt automatisch + lädt Metadaten (TheMovieDB)
+5. Streaming auf allen Geräten (Phone, TV, Laptop)
+
+**Dauer pro Disc:**
+- DVD: 10-20 Min
+- Blu-ray: 20-40 Min
+- 4K Blu-ray: 40-90 Min
+
+**Timeline:**
+- **Phase 1 (KW 2-3/2026):** Hardware bestellen (AliExpress, Lieferzeit 2-4 Wochen)
+- **Phase 2 (KW 4-6):** Backup + Planung während Lieferung
+- **Phase 3 (1-2 Tage):** Hardware-Aufbau (JONSBO N4 Assembly)
+- **Phase 4:** Software-Setup (Unraid Array + Intel QuickSync aktivieren)
+- **Phase 5:** Daten-Migration (rsync von cisco + Synology)
+- **Phase 6:** Docker-Container anpassen (Pfade auf lokalen Storage)
+- **Phase 7:** Blu-ray-Sammlung rippen
+- **Phase 8:** Testing & Optimierung
+
+**Geschätzte Fertigstellung:** KW 8-10 / 2026
+
+---
+
+### cisco – Kleine Verbesserungen
+
+**Geplant:**
+- [ ] RAM-Upgrade: 16GB → 32GB (für mehr Container)
+- [ ] Zusätzliche SSD für schnelleren Docker-Cache
+- [ ] Besseres Kabelmanagement nach Gehäuse-Reinigung
+- [ ] UPS (Unterbrechungsfreie Stromversorgung) für sauberes Shutdown
+- [ ] Lüfter-Optimierung (PWM-Steuerung für leiseren Betrieb)
+
+**Monitoring:**
+- [ ] Grafana + Prometheus für System-Metriken
+- [ ] HDD Health Monitoring (SMART)
+- [ ] Strom-Verbrauchsmessung (Idle vs. Last)
+
+---
+
+### barry – Linux Migration
+
+**Option 1: ThinkPad behalten**
+- Win11 → Fedora/Arch Linux
+- Dual-Boot (falls Windows noch gebraucht wird)
+- KDE Plasma oder GNOME
+- Gleiche Dock-Kompatibilität
+
+**Option 2: Neues Notebook**
+- ThinkPad P/T-Serie (bessere Linux-Kompatibilität)
+- Framework Laptop (reparierbar, modular)
+- System76 (vorinstalliertes Linux)
+
+**Ziel:** Vollständig auf Linux für maximale Konsistenz mit cisco
+
+---
+
+### Netzwerk – Das große Upgrade
+
+**Aktuell:**
+- Standard Router vom Provider
+- Alle Geräte im gleichen Netzwerk
+- Keine VLANs
+- DNS über Pi-hole (auf gideon)
+
+**Geplant:**
+
+**1. VLANs einrichten:**
+```
+VLAN 10: Main Network (cisco, barry, gideon)
+VLAN 20: IoT (Smart Home, Kameras, etc.)
+VLAN 30: Gäste (isoliert)
+```
+
+**2. OPNsense/pfSense Router:**
+- Bessere Firewall-Kontrolle
+- VPN-Server (WireGuard/OpenVPN)
+- Traffic-Monitoring
+- IDS/IPS (Intrusion Detection)
+
+**3. DNS-Trennung:**
+- Intern: `*.intern.phudevelopment.xyz` → Pi-hole
+- Extern: `*.phudevelopment.xyz` → Cloudflare
+- DoH (DNS-over-HTTPS) für Privacy
+
+**4. LAN-Upgrade (mittelfristig):**
+- 2.5G Switch für cisco ↔ gideon
+- Oder: 10G über gideons 4x 2.5G Bonding
+- CAT6a Verkabelung
+
+---
+
+### Storage & Backup-Strategie
+
+**3-2-1 Backup-Regel:**
+- **3** Kopien der Daten
+- **2** verschiedene Medien (HDD + Cloud)
+- **1** Kopie offsite
+
+**Geplant:**
+1. **Local Backup:** cisco → gideon (täglich, Syncthing/rsync)
+2. **Cloud Backup:** Kritische Daten → Cloudflare R2 / Hetzner Storage Box
+3. **Offsite Backup:** Externe HDD bei Eltern/Freunden
+
+**Tools:**
+- Borg Backup (verschlüsselt, dedupliziert)
+- Restic (Alternative, Cloud-native)
+- Syncthing (kontinuierlich)
+- Rclone (Cloud-Sync)
+
+---
+
+## Lessons Learned
+
+**1. Headless ist der Weg**
+Kein Monitor, keine GUI, keine Ablenkung. SSH + VS Code Remote ist produktiver als ich dachte.
+
+**2. Docker ist King**
+Alle Services containerisiert = leicht reproduzierbar, leicht skalierbar, leicht wartbar.
+
+**3. Zentrale Auth ist Gold wert**
+Keycloak als SSO-Provider + OAuth2-Proxy = einmal einloggen, überall Zugriff.
+
+**4. Monitoring ist Pflicht**
+Uptime Kuma zeigt mir sofort, wenn ein Service down ist. Früher habe ich das oft erst Stunden später gemerkt.
+
+**5. Dokumentation zahlt sich aus**
+Ich habe eine 1500+ Zeilen umfassende Infrastruktur-Dokumentation geschrieben. Wenn in 6 Monaten etwas schief geht, weiß ich genau, wie alles aufgebaut ist.
+
+---
+
+## Fazit
+
+Vom improvisierten Setup zum **durchdachten Homelab-System** – es war eine Reise, aber jede Minute hat sich gelohnt.
+
+Heute habe ich:
+- **Ein Setup, das skaliert**
+- **Services, die laufen** (99,9% Uptime)
+- **Einen Workflow, der funktioniert** (pj → tmux → nvim → done)
+- **Infrastruktur, auf die ich stolz bin**
+
+Und das Beste: **Ich kann jetzt fokussiert arbeiten**, statt ständig gegen mein Setup zu kämpfen.
+
+Wenn du auch überlegst, dein Setup zu überarbeiten: **Tu es.** Es lohnt sich.
+
+---
+
+**Tech-Stack:**
+- Arch Linux (cisco) + Windows 11/Linux (barry) + Unraid (gideon)
+- Docker + Docker Compose
+- Caddy + Cloudflare
+- Keycloak + OAuth2-Proxy
+- PostgreSQL, N8N, Guacamole
+- VS Code Remote SSH
+- Syncthing, Tailscale
+
+**Domains:**
+- phudevelopment.xyz
+- phuonline.de
+- einfachnurphu.io
+
+---
+
+💬 **Fragen? Feedback?** Schreib mir! Ich teile gerne mehr Details über einzelne Komponenten.
