@@ -22,7 +22,7 @@ function MastodonIcon() {
 export default function FollowMe() {
   const items = [
     { href: "https://github.com/CommanderPhu", label: "GitHub", icon: <Github size={18} /> },
-    { href: "https://www.linkedin.com/in/joshua-phu", label: "LinkedIn", icon: <Linkedin size={18} /> },
+    { href: "https://www.linkedin.com/in/joshuaphu", label: "LinkedIn", icon: <Linkedin size={18} /> },
     { href: "https://instagram.com/einfachnurphu", label: "Instagram", icon: <Instagram size={18} /> },
     {
       href: "https://mastodon.social/@einfachnurphu",
