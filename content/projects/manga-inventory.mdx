@@ -1,0 +1,32 @@
+---
+title: "Manga Inventory – Sammlung digital verwalten"
+slug: "manga-inventory"
+summary: "Multi-Plattform Verwaltungssystem für Manga-Sammlungen: Web-Frontend, REST-API und Flutter Mobile App mit Barcode-Scanner – entstanden aus einer Excel-Liste."
+tags: ["Next.js", "Flutter", "Node.js", "PostgreSQL", "Docker", "Homelab"]
+repo: "https://github.com/commanderphu/manga-inventory"
+date: 2026-04-03
+featured: false
+cover: "/images/placeholder-project.svg"
+---
+
+<Callout>Entstanden aus dem Wunsch, eine analoge Excel-Manga-Liste digital, durchsuchbar und mobil zugänglich zu machen.</Callout>
+
+**Manga Inventory** ist ein Multi-Plattform-System zur Verwaltung meiner Manga-Sammlung – läuft selbstgehostet im Homelab.
+
+### Was es kann
+
+- 📚 Manga-Einträge verwalten mit Cover-Anzeige, Band-Tracking und Status
+- 📱 **Barcode-Scanner** in der Flutter-App – ISBN scannen, direkt hinzufügen
+- 🔍 Suche, Filter und Statistiken über die Sammlung
+- 🖥️ Web-Frontend für Desktop/Tablet, Mobile App für unterwegs
+
+### Architektur
+
+Drei Komponenten, eine Datenbank:
+
+- **Web-Frontend** – Next.js 15, moderne Oberfläche für Desktop und Tablet
+- **REST-API** – Node.js/Express mit PostgreSQL, JWT-Auth
+- **Mobile App** – Flutter (iOS + Android) mit Barcode-Scanner
+
+**Stack:** Next.js · Flutter · Node.js · Express · PostgreSQL · Docker  
+**Repo:** [commanderphu/manga-inventory](https://github.com/commanderphu/manga-inventory)
