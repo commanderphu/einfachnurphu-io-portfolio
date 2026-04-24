@@ -44,7 +44,7 @@ export default function Footer() {
         {/* Copyright + Signature */}
         <div className="space-y-2 mt-6">
           <p className="text-xs text-white/40 font-mono">
-            © {year} Joshua Phu Bein · einfachnurphu.io
+            © {year} Joshua Phu Kuhrau · einfachnurphu.io
           </p>
 
           {/* eslint-disable-next-line react/no-unescaped-entities */}
