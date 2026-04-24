@@ -156,7 +156,7 @@ export default function ResumePage() {
     <section className="mx-auto max-w-4xl px-4 py-20">
       <header className="mb-8">
         <h1 className="text-4xl font-bold tracking-tight">Lebenslauf</h1>
-        <p className="text-white/70">Joshua Phu Bein · Koblenz, Deutschland</p>
+        <p className="text-white/70">Joshua Phu Kuhrau · Koblenz, Deutschland</p>
 
         <div className="mt-4 flex flex-wrap gap-3">
           <a

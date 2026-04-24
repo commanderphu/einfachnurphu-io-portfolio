@@ -134,6 +134,6 @@ Dieses Projekt ist Teil der persönlichen Marke **Joshua Phu / K.I.T. Solutions*
 
 ## ⚡ Autor
 
-**Joshua Phu Bein**
+**Joshua Phu Kuhrau**
 K.I.T. Solutions · einfachnurphu.io
 IT-Supporter · Developer · Nerd · Flash-Fan

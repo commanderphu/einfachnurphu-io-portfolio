@@ -118,7 +118,7 @@ export default async function PostPage({
       <footer className="mt-16 border-t border-white/10 pt-8 text-center text-white/70">
         <ShareBar title={post.title} />
         <p className="mt-8 italic text-sm">
-          „Stay nerdy, stay curious.“ — Joshua Phu Bein
+          „Stay nerdy, stay curious.“ — Joshua Phu Kuhrau
         </p>
       </footer>
 

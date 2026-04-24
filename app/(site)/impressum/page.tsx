@@ -5,7 +5,7 @@ export default function ImpressumPage() {
 
       <div className="space-y-1 text-white/80">
         <p>Angaben gemäß § 5 TMG</p>
-        <p><strong>Joshua Phu Bein – K.I.T. Solutions</strong></p>
+        <p><strong>Joshua Phu Kuhrau – K.I.T. Solutions</strong></p>
         <p>Dietzstr. 1</p>
         <p>56073 Koblenz</p>
         <p>Deutschland</p>

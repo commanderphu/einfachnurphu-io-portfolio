@@ -2,8 +2,8 @@
 export const site = {
   name: "einfachnurphu.io",
   url: "https://einfachnurphu.io",
-  title: "Joshua Phu Bein – Portfolio",
-  description: "Projekte, Werdegang & Blog von Joshua Phu Bein.",
+  title: "Joshua Phu Kuhrau – Portfolio",
+  description: "Projekte, Werdegang & Blog von Joshua Phu Kuhrau.",
   ogImage: "/api/og?title=einfachnurphu.io",
 }
 
