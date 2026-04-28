@@ -48,13 +48,18 @@ export default function Embed({ url, caption }: Props) {
 
   // === Spotify ===
   if (isSpotify) {
-    const embedUrl = url.replace("/track/", "/embed/track/")
+    const embedUrl = url
+      .replace(/\?.*$/, "")
+      .replace(/\/intl-[a-z-]+\//, "/")
+      .replace("open.spotify.com/", "open.spotify.com/embed/")
+      .replace("/embed/embed/", "/embed/")
+    const isTrack = /\/track\//.test(embedUrl)
     return (
       <div className="embed-card-wrapper">
         <div className="embed-card">
           <iframe
             src={embedUrl}
-            height="152"
+            height={isTrack ? "152" : "380"}
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
           />
