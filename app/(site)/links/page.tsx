@@ -43,6 +43,7 @@ const sections = [
       { name: "Last.fm", url: "https://last.fm/user/einfachnurphu", icon: faMusic },
       { name: "stats.fm", url: "https://stats.fm/einfachnurphu", icon: faChartSimple },
       { name: "Spotify", url: "https://open.spotify.com/user/einfachnurphu", icon: faSpotify },
+      { name: "Musikreise Playlist", url: "https://open.spotify.com/playlist/5iUyXpHVsXocHiqv6YLvn0", icon: faSpotify },
     ],
   },
   {
