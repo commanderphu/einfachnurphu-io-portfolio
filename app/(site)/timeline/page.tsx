@@ -39,9 +39,14 @@ const TIMELINE = [
     desc: "IT mit Haltung – Open Source, fair, lokal. Nebenberuflicher Start in Koblenz.",
   },
   {
-    date: "2025–heute",
+    date: "2025–2026",
     title: "Computacenter / Experis GmbH – Junior-Techniker",
     desc: "Field-IT & Support, Kundenkontakt, Administration.",
+  },
+  {
+    date: "2026–heute",
+    title: "Matenaar Service GmbH (TOP Mehrwert-Logistik) – IT-Außendiensttechniker",
+    desc: "Wartung & Installation von Druckern, Multifunktionsgeräten und Self-Service-Systemen (u.a. Amazon Locker), deutschlandweiter Vor-Ort-Support.",
   },
   {
     date: "Zukunft",

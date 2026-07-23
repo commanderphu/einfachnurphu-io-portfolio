@@ -1,9 +1,21 @@
 export default function ResumePage() {
-  const updated = "2025-10-07" // bei Bedarf automatisieren
+  const updated = "2026-07-23" // bei Bedarf automatisieren
 
   const experience = [
     {
-      period: "Aug 2025 – heute",
+      period: "Apr 2026 – heute",
+      role: "IT-Außendiensttechniker",
+      company: "Matenaar Service GmbH (TOP Mehrwert-Logistik)",
+      location: "Koblenz, DE",
+      bullets: [
+        "Wartung & Instandhaltung von Druckern und Multifunktionsgeräten",
+        "Installation & Service von Self-Service-Systemen (u.a. Amazon Locker)",
+        "Troubleshooting & Vor-Ort-Support für IT-Infrastruktur",
+        "Deutschlandweiter Außendiensteinsatz"
+      ],
+    },
+    {
+      period: "Aug 2025 – Mrz 2026",
       role: "Junior-Techniker",
       company: "Computacenter (über Experis GmbH)",
       location: "Düsseldorf, DE",

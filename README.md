@@ -7,10 +7,10 @@ Hier findest du alles, was mich antreibt: IT, Design, Open Source und ehrliche P
 ---
 
 ## 🚀 Tech Stack
-- **Framework:** Next.js (App Router) + TypeScript  
-- **Styling:** TailwindCSS + Catppuccin Frappe Theme  
+- **Framework:** Next.js 15 (App Router) + TypeScript  
+- **Styling:** TailwindCSS v4 + Catppuccin Frappe Theme  
 - **Content:** Velite + MDX  
-- **Deployment:** Vercel (Main) / Unraid (Dev)  
+- **Deployment:** Cloudflare Pages (via OpenNext) · Docker/Unraid (lokale Entwicklung)  
 - **Tools:** PNPM · ESLint FlatConfig · Blog CLI · OG Image API  
 - **Designfarben:**  
   - Hintergrund: `#232223`  
@@ -26,9 +26,14 @@ Hier findest du alles, was mich antreibt: IT, Design, Open Source und ehrliche P
 | `/app/page.tsx` | Hero + Projekte-Teaser |
 | `/app/(site)/about` | Über mich + Profilbild |
 | `/app/(site)/timeline` | Werdegang & Flash-Story |
-| `/app/(site)/projects` | Workmate · Nerdcast · TravelTune |
+| `/app/(site)/projects` | Workmate · Nerdcast · TravelTune · Manga Inventory |
 | `/app/(site)/blog` | MDX-basierte Blogposts (Velite Content) |
+| `/app/(site)/links` | Linktree-artige Übersicht (u.a. Spotify-Playlists) |
+| `/app/(site)/resume` | Lebenslauf |
+| `/app/(site)/contact` | Kontaktformular |
+| `/app/(site)/impressum` | Impressum |
 | `/app/api/og` | Dynamische OG-Bilder (Next.js ImageResponse) |
+| `/app/api/contact` | Kontaktformular-Handler (Resend) |
 | `/components/mdx` | Custom-Komponenten für Posts |
 | `/scripts/blog.ts` | CLI für Post-Erstellung, OG-Update & Cleanup |
 | `/public/images` | Logos, Profilbilder, Projekt-Covers |
@@ -52,6 +57,7 @@ Keine Cloud-Abhängigkeit, kein Vendor-Lock-in – nur saubere IT mit Haltung.
 | **Workmate** | HR-Tool für Personalakten, Reminders und Urlaubsverwaltung (FastAPI + Postgres) |
 | **Nerdcast** | Persönlicher Podcast über Tech, Popkultur und Mental Health |
 | **TravelTune** | Reise- und Festivalprojekt mit Jessica – Musik, Roadtrips & Nerdmomente |
+| **Manga Inventory** | Tool zur digitalen Verwaltung der eigenen Manga-Sammlung |
 
 ---
 
@@ -105,8 +111,11 @@ pnpm install
 # Lokaler Start
 pnpm dev
 
-# Build (Vercel/Prod)
+# Build (Prod)
 pnpm build
+
+# Deploy (Cloudflare Pages via OpenNext)
+pnpm deploy
 
 # Blog-Workflow
 pnpm blog create "Mein neuer Artikel"
