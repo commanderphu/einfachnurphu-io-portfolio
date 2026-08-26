@@ -1,126 +1,57 @@
-"use client"
+import type { Metadata } from "next"
+import { projects as allProjects } from "#site/content"
+import ProjectsFilter from "@/components/projects/ProjectsFilter"
+import type { ProjectStatus, ProjectSummary } from "@/components/projects/types"
+import { STATUS_ORDER } from "@/components/projects/types"
 
-import { useState, useMemo } from "react"
-import Link from "next/link"
-import Image from "next/image"
-
-type ProjectLite = {
-  title: string
-  slug: string
-  summary: string
-  tags: string[]
-  cover?: string
-  featured?: boolean
+export const metadata: Metadata = {
+  title: "Projekte",
+  description:
+    "Von selbstgehosteter Infrastruktur über ERP-Software bis zu Podcast und Reisen – woran ich arbeite.",
 }
 
-// Beispiel-Daten (wenn du später Contentlayer nutzt, einfach ersetzen)
-const projects: ProjectLite[] = [
-  {
-    title: "Workmate – HR/Backoffice Toolkit",
-    slug: "workmate",
-    summary:
-      "Ein Fullstack-Tool für Personalakten, Reminders und Abwesenheiten. Entwickelt mit FastAPI und PostgreSQL.",
-    tags: ["FastAPI", "Postgres", "Vue", "React", "Docker"],
-    cover: "/images/workmate-cover.png",
-    featured: true,
-  },
-  {
-    title: "Nerdcast – Der Podcast für Nerds, IT & Alltag",
-    slug: "nerdcast",
-    summary:
-      "Mein persönlicher Podcast über Technik, Popkultur und das echte Leben als Nerd & ITler.",
-    tags: ["Podcast", "Tech", "Popkultur", "Linux"],
-    cover: "/images/nerdcast-cover.jpg",
-    featured: false,
-  },
-  {
-    title: "TravelTune – Reisen, Musik & Nerd-Momente",
-    slug: "traveltune",
-    summary:
-      "Ein Reise- & Lifestyle-Projekt mit Jessica: Nerdkultur trifft Roadtrip-Vibes.",
-    tags: ["Travel", "Content", "Music"],
-    cover: "/images/traveltune-logo.png",
-    featured: false,
-  },
-]
+// Velite liefert den kompilierten MDX-Body mit. Für die Übersicht wird davon
+// nichts gebraucht, deshalb hier auf die Felder reduzieren, die die Karten
+// tatsächlich anzeigen – das hält die an den Client gereichte Nutzlast klein.
+function toSummary(p: (typeof allProjects)[number]): ProjectSummary {
+  return {
+    title: p.title,
+    slug: p.slug,
+    url: p.url,
+    summary: p.summary,
+    cover: p.cover,
+    tags: p.tags,
+    tech: p.tech,
+    featured: p.featured,
+    status: p.status as ProjectStatus | undefined,
+    date: p.date,
+  }
+}
+
+// Hervorgehobenes zuerst, dann nach Status (Laufendes vor Ruhendem),
+// innerhalb dessen das Neueste zuerst.
+function sortProjects(a: ProjectSummary, b: ProjectSummary) {
+  if (a.featured !== b.featured) return a.featured ? -1 : 1
+
+  const sa = a.status ? STATUS_ORDER[a.status] : 99
+  const sb = b.status ? STATUS_ORDER[b.status] : 99
+  if (sa !== sb) return sa - sb
+
+  return new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime()
+}
 
 export default function ProjectsPage() {
-  const [q, setQ] = useState("")
-
-  const filtered = useMemo<ProjectLite[]>(() => {
-    const query = q.toLowerCase().trim()
-    if (!query) return projects
-    return projects.filter(
-      (p) =>
-        p.title.toLowerCase().includes(query) ||
-        p.tags.some((t) => t.toLowerCase().includes(query))
-    )
-  }, [q])
+  const projects = allProjects.map(toSummary).sort(sortProjects)
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-20">
       <h1 className="mb-6 text-4xl font-bold">Projekte</h1>
-      <p className="mb-8 max-w-2xl text-white/70">
-        Von Backoffice-Tools bis Podcasts & Reisen – meine Projekte zeigen, dass
-        IT mehr sein kann als nur Technik. ⚡
+      <p className="mb-10 max-w-2xl text-dim">
+        Von selbstgehosteter Infrastruktur über ERP-Software bis zu Podcast und
+        Reisen – woran ich arbeite und was davon läuft. ⚡
       </p>
 
-      {/* Searchbar */}
-      <div className="mb-10">
-        <input
-          type="text"
-          placeholder="🔍 Nach Projekt oder Tag suchen..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent,#ff9100)]"
-          aria-label="Projekte durchsuchen"
-        />
-      </div>
-
-      {/* Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((p) => (
-          <Link
-            key={p.slug}
-            href={`/projects/${p.slug}`}
-            className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition hover:border-[var(--accent,#ff9100)]"
-          >
-            {p.cover && (
-              <div className="aspect-video w-full overflow-hidden">
-                <Image
-                  src={p.cover}
-                  alt={p.title}
-                  width={1200}
-                  height={675}
-                  sizes="(max-width: 1024px) 100vw, 33vw"
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  priority={false}
-                />
-              </div>
-            )}
-            <div className="flex flex-1 flex-col p-5">
-              <h2 className="text-lg font-semibold group-hover:text-[var(--accent,#ff9100)]">
-                {p.title}
-              </h2>
-              <p className="mt-2 flex-1 text-sm text-white/80">{p.summary}</p>
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {p.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full bg-white/5 px-2.5 py-1 text-xs text-white/70 ring-1 ring-white/10"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
-        <p className="mt-10 text-center text-white/50">Keine Projekte gefunden.</p>
-      )}
+      <ProjectsFilter projects={projects} />
     </section>
   )
 }

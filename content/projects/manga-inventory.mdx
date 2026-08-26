@@ -4,9 +4,12 @@ slug: "manga-inventory"
 summary: "Multi-Plattform Verwaltungssystem für Manga-Sammlungen: Web-Frontend, REST-API und Flutter Mobile App mit Barcode-Scanner – entstanden aus einer Excel-Liste."
 tags: ["Next.js", "Flutter", "Node.js", "PostgreSQL", "Docker", "Homelab"]
 repo: "https://github.com/commanderphu/manga-inventory"
-date: 2026-04-03
+date: 2026-08-17
 featured: false
 cover: "/images/placeholder-project.svg"
+status: "active"
+demo: "https://manga.phudevelopement.xyz"
+tech: ["Next.js 15", "Flutter", "Node.js 20", "Express", "PostgreSQL", "Docker", "GitHub Actions"]
 ---
 
 <Callout>Entstanden aus dem Wunsch, eine analoge Excel-Manga-Liste digital, durchsuchbar und mobil zugänglich zu machen.</Callout>
@@ -28,5 +31,20 @@ Drei Komponenten, eine Datenbank:
 - **REST-API** – Node.js/Express mit PostgreSQL, JWT-Auth
 - **Mobile App** – Flutter (iOS + Android) mit Barcode-Scanner
 
-**Stack:** Next.js · Flutter · Node.js · Express · PostgreSQL · Docker  
-**Repo:** [commanderphu/manga-inventory](https://github.com/commanderphu/manga-inventory)
+### Wie es betrieben wird
+
+Die drei Teile laufen an drei verschiedenen Orten – jeder da, wo er hingehört:
+
+- **API** als Container auf einem eigenen Server, Image aus der GitHub Container Registry
+- **Frontend** auf Vercel unter [manga.phudevelopement.xyz](https://manga.phudevelopement.xyz)
+- **App** im internen Test des Play Stores – bewusst nicht öffentlich, die Sammlung ist meine
+
+### Vom Commit in den Betrieb
+
+Ein Push auf `main` baut über **GitHub Actions** ein neues Image und legt es in der Registry ab. Den Server fasst GitHub dabei **nicht** an – der holt sich die neue Fassung selbst.
+
+Das ist Absicht: Das Repo ist öffentlich. Ein Build-Runner auf der eigenen Maschine würde fremden Code aus Pull Requests genau dort ausführen, wo er nichts zu suchen hat.
+
+**Stack:** Next.js 15 · Flutter · Node.js 20 · Express · PostgreSQL · Docker · GitHub Actions  
+**Repo:** [commanderphu/manga-inventory](https://github.com/commanderphu/manga-inventory)  
+**Live:** [manga.phudevelopement.xyz](https://manga.phudevelopement.xyz)
