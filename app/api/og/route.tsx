@@ -2,8 +2,12 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+
+// Kein Export: Bei einem Route-Handler sind nur bestimmte Namen als Export
+// erlaubt (runtime, dynamic, revalidate, ...). size/contentType gehoeren zu
+// opengraph-image.tsx - hier fuehren sie zu einem Typfehler in den von Next
+// generierten Typen. Als lokale Konstante bleibt das Verhalten gleich.
+const size = { width: 1200, height: 630 };
 
 // Font laden wie vorher – dein Originalstil
 async function loadFont() {
