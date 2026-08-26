@@ -1,0 +1,90 @@
+---
+title: "S.T.A.R. Labs – Das eigene Rechenzentrum"
+slug: "homelab"
+summary: "Selbstgehostete Infrastruktur zu Hause: Reverse Proxy, SSO, versionierte Backups, redundanter Fernzugang – und die Ausfälle, aus denen ich am meisten gelernt habe."
+tags: ["Homelab", "Docker", "Linux", "Self-Hosting", "Netzwerk", "Backup"]
+tech: ["Arch Linux", "Unraid", "Docker", "Caddy", "Keycloak", "Tailscale", "Cloudflare", "Proxmox", "systemd"]
+date: 2026-08-26
+featured: true
+featuredOrder: 2
+status: "active"
+cover: "/images/homelab-cover.webp"
+---
+
+<Callout>Ein Server im Hobbyzimmer, ein NAS, ein gemieteter Server als Schleuse nach außen – und die Erkenntnis, dass der Betrieb schwieriger ist als der Aufbau.</Callout>
+
+Das Homelab heißt **S.T.A.R. Labs**, die Rechner tragen Namen aus dem Arrowverse. Was als Spielerei anfing, ist inzwischen die Grundlage für alles andere hier: Entwicklung, Dokumente, Medien, Heimautomatisierung, die Dienste von K.I.T. Solutions.
+
+## Warum überhaupt selbst hosten
+
+Nicht aus Sparsamkeit – gerechnet auf die Stunden lohnt es sich nie.
+
+Es geht um zwei Dinge. **Meine Daten bleiben meine**, besonders die aus dem papierlosen Büro. Und **ich verstehe, was ich betreibe** – jeder Dienst hier ist einmal von Hand aufgesetzt, kaputtgegangen und repariert worden. Das ist Wissen, das sich nicht aus Dokumentation ziehen lässt.
+
+## Wie es aufgebaut ist
+
+**Zwei Zonen, klar getrennt.** Was öffentlich erreichbar sein muss, läuft auf einem gemieteten Server. Was privat ist, bleibt zu Hause und ist von außen gar nicht erst ansprechbar.
+
+**Keine offenen Ports.** Der Weg von außen führt über Tunnel, nicht über Portfreigaben am Router. Was nicht erreichbar ist, kann auch nicht angegriffen werden.
+
+**Ein Reverse Proxy vor allem.** Zertifikate laufen automatisch über eine DNS-Challenge, jeder Dienst bekommt einen eigenen Namen statt einer Portnummer.
+
+**Zentrale Anmeldung.** Ein eigener Identitätsanbieter mit OAuth2/OIDC – ein Konto für alle Dienste, statt in jedem Werkzeug ein eigenes Passwort.
+
+**Getrenntes DNS.** Interne Namen lösen nur im Heimnetz auf und zeigen nach draußen ins Leere.
+
+## Redundanz, die sich am selben Abend bewährt hat
+
+Der Fernzugang lief lange über **einen** Rechner. Fiel der aus, war ich draußen – und zwar genau dann, wenn ich den Zugriff am nötigsten gebraucht hätte.
+
+Am 20.08.2026 habe ich einen zweiten Rechner als Zugangsknoten eingerichtet. **Am selben Abend fiel er aus**, und der Zugang schaltete ohne mein Zutun zurück. Redundanz, die man erst braucht, wenn es zu spät ist, hat man nicht.
+
+## Backups: die unangenehme Lektion
+
+Es gab drei Sicherungen, drei Zeitpläne, alles automatisiert. Sah gut aus.
+
+**Nur waren die Versionsstände nie da.** Die eine Aufgabe schrieb um 03:00 einen datierten Ordner, die nächste spiegelte um 03:02 mit `--delete` darüber und löschte ihn wieder. Monatelang. Aufgefallen ist es erst, als ich einen alten Stand *brauchte*.
+
+Heute liegen die Stände getrennt von den gespiegelten Daten, und die Aufbewahrungsfrist greift tatsächlich.
+
+**Was ich daraus gelernt habe:** Ein Backup, das nie zurückgespielt wurde, ist kein Backup, sondern eine Vermutung.
+
+## Drei Ausfälle, die etwas beigebracht haben
+
+### Ein Update, das Tage später zuschlug
+
+Auf einem Rolling-Release-System ersetzt ein Kernel-Update die Module des laufenden Kernels. Bis zum Neustart läuft alles weiter – **aber kein Modul lässt sich mehr nachladen.** Container starteten tagelang normal, bis einer neu starten musste. Dann stand der Host.
+
+Die Ursache lag zu diesem Zeitpunkt schon eine Woche zurück. Seitdem gehört der Neustart zum Update, nicht in die nächste freie Stunde.
+
+### Docker war schneller als die Festplatte
+
+Ein Dienst brach nach einem Neustart ab, mit einer Fehlermeldung über einen Bind-Mount. Die Vermutung lag nahe, dass die Datenbank beschädigt war.
+
+War sie nicht. **Docker startete vor dem Einhängen der Datenplatte.** Fehlt die Quelle eines Bind-Mounts, legt Docker dort stillschweigend ein *Verzeichnis* an – und danach scheitert jeder Datei-Mount dauerhaft. Der Fehler lag nicht in der Anwendung, sondern in der Startreihenfolge. Ein `RequiresMountsFor` hat es behoben.
+
+**Die Lehre:** Wenn eine Fehlermeldung auf Datenverlust hindeutet, erst nachsehen, ob die Daten wirklich weg sind.
+
+### Die Netzwerkkarte starb, das System lief weiter
+
+Ein Rechner war nicht mehr erreichbar – kein SSH, kein Ping, nicht einmal per ARP. Naheliegend: abgestürzt.
+
+Die Protokolle sagten etwas anderes. Das System lief normal weiter, die Speicherüberwachung schrieb bis zur letzten Sekunde unauffällige Werte, sogar das Anstecken einer Tastatur wurde noch sauber vermerkt. **Nur die Netzwerkkarte war tot** – und zwar so, dass der Treiber es selbst nicht bemerkte: keine einzige Meldung im gesamten Protokoll.
+
+Ohne die Überwachung, die ich nach einem früheren Ausfall eingerichtet hatte, hätte ich stundenlang die falsche Ursache gesucht.
+
+## Was mir das für die Arbeit gibt
+
+Die Dinge, die hier schiefgehen, sind dieselben, die in Firmennetzen schiefgehen – nur trage ich die Folgen selbst. Startreihenfolgen, Zertifikate, DNS-Eigenheiten, Sicherungen, die nicht sichern: Das lernt man nicht aus Handbüchern, sondern wenn um 22 Uhr etwas steht und niemand da ist, den man fragen könnte.
+
+Genau das fließt in **K.I.T. Solutions** und in [WORKMATE](/projects/workmate) zurück.
+
+## Wie es weitergeht
+
+Der Hauptserver läuft auf Hardware von 2014 und trägt inzwischen zu viel. Der nächste Schritt ist ein Umbau auf einen **Proxmox-Hypervisor** mit sauberer Trennung: Container getrennt von virtuellen Maschinen, statt alles auf einem Wirt.
+
+Dazu ein zweiter DNS-Server, damit nicht das ganze Haus steht, wenn ein Gerät ausfällt – der Fehler, den ich beim Fernzugang schon einmal gemacht habe.
+
+---
+
+**Stack:** Arch Linux · Unraid · Docker · Caddy · Keycloak · Tailscale · Cloudflare · systemd · Proxmox (geplant)

@@ -30,7 +30,11 @@ export default function Embed({ url, caption }: Props) {
   // === YouTube ===
   if (isYouTube) {
     const videoId = url.replace(/.*(youtu\.be\/|v=)([^#&?]*).*/, "$2").split("?")[0]
-    const embedUrl = `https://www.youtube.com/embed/${videoId}`
+    // youtube-nocookie statt youtube.com: Google setzt dann beim reinen
+    // Laden keine Werbe-/Trackingcookies. Die IP wird weiterhin
+    // uebertragen - vollstaendig loesen wuerde das nur eine Loesung,
+    // die das Video erst nach Klick nachlaedt.
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`
     return (
       <div className="embed-card-wrapper">
         <div className="embed-card">

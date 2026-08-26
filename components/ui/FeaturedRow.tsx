@@ -23,7 +23,14 @@ export default function FeaturedRow({
     items ??
     projects
       .filter((p) => p.featured)
-      .sort((a, b) => +new Date(b.date) - +new Date(a.date))
+      // featuredOrder gibt die Erzaehlreihenfolge vor. Wo es fehlt,
+      // entscheidet weiterhin das Datum - neueste zuerst.
+      .sort((a, b) => {
+        const oa = a.featuredOrder ?? Number.MAX_SAFE_INTEGER
+        const ob = b.featuredOrder ?? Number.MAX_SAFE_INTEGER
+        if (oa !== ob) return oa - ob
+        return +new Date(b.date) - +new Date(a.date)
+      })
       .slice(0, limit)
 
   if (featured.length === 0) return null

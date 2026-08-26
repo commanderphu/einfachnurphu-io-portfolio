@@ -1,87 +1,129 @@
 ---
-title: "Workmate – Die Produktfamilie"
+title: "WORKMATE – Die Produktfamilie"
 slug: "workmate"
-summary: "Workmate ist eine Familie von Tools rund um Arbeit, Verwaltung und persönliche Organisation – vom internen HR-Tool über eine vollständige ERP-Plattform bis zum ADHD-Assistenten und Live-Streaming-Lösung."
-tags: ["FastAPI", "Flutter", "Vue 3", "Go", "PostgreSQL", "Docker", "Python", "TypeScript"]
-repo: "https://github.com/commanderphu/workmate_private"
+summary: "Eine modulare Software-Suite für Arbeit und Organisation: ERP, Streaming, Eventbetrieb, Zutrittskontrolle und Systemdiagnose – fünf Module unter einer Dachmarke, selbstgehostet."
+tags: ["FastAPI", "Vue 3", "Go", "React", "Flutter", "PostgreSQL", "Docker"]
+tech: ["Vue 3", "FastAPI", "Go", "React", "Flutter", "PostgreSQL", "SQLite", "Docker", "Zitadel SSO", "ESP32"]
+repo: "https://github.com/K-I-T-Solutions"
+demo: "https://workmate.kit-it-koblenz.de"
 date: 2026-04-20
 featured: true
-cover: "/images/workmate-cover.png"
+featuredOrder: 1
+status: "active"
+cover: "/images/workmate-cover-2026.jpg"
 ---
 
-<Callout>**Workmate** ist kein einzelnes Produkt – es ist eine wachsende Familie von Tools, die alle ein Ziel teilen: Arbeit und Alltag einfacher machen.</Callout>
+<Callout>**WORKMATE** ist kein einzelnes Produkt, sondern eine Familie von Werkzeugen mit einem gemeinsamen Ziel: Arbeit und Alltag einfacher machen.</Callout>
 
-## Die Produkte
+Was als internes Verwaltungstool für K.I.T. Solutions begann, ist heute eine modulare Suite aus fünf Produkten. Jedes löst einen eigenen Bereich, alle teilen Aussehen, Anmeldung und Bedienlogik.
 
----
-
-### 🏢 Workmate → Workmate OS
-**Von internem HR-Tool zur modularen ERP-Plattform**
-
-Workmate begann als internes Verwaltungssystem für K.I.T. Solutions – Personalakte, Krankmeldungen, Urlaubsanträge, Zeiterfassung. Aus diesem Kern entstand **Workmate OS**: eine vollständige, modulare ERP/CRM-Plattform für Teams und Organisationen.
-
-Heute ist Workmate OS in Version 4.0 mit 4 abgeschlossenen Phasen:
-
-- 👤 Personal & Abteilungen · 💼 CRM & Kundenverwaltung · 📁 Projekte & Budgets
-- 🧾 Rechnungen & Finanzen · 🕒 Zeiterfassung · 🔐 Zitadel SSO (OAuth2/OIDC)
-- 🎫 Support-Tickets · 📚 Knowledge Base · 🏖️ HR Self-Service & Recruiting
-- 🛠️ Admin Panel · 📋 Audit Log · ⚙️ System Settings
-
-**Stack:** Vue 3 · FastAPI · PostgreSQL · Zitadel SSO · Docker  
-**Live:** [workmate.kit-it-koblenz.de](https://workmate.kit-it-koblenz.de)  
-**Repo:** [K-I-T-Solutions/workmate_os](https://github.com/K-I-T-Solutions/workmate_os)
+Das Zeichen ist eine endlose Schleife, die ein **W** und ein **M** formt – für nahtlose Abläufe und das Prinzip, das die Suite trägt: ein Werkzeug, das mitarbeitet.
 
 ---
 
-### 🧠 Workmate Private
-**ADHD Task Management – von einem Neurodivergenten für Neurodivergente**
+## Die Module
 
-Persönlicher digitaler Assistent speziell für ADHD: Dokumente per Kamera scannen und mit Claude AI analysieren, Aufgaben verwalten, Kalender bidirektional synchronisieren (CalDAV + Google Calendar), Push-Benachrichtigungen mit mehrstufigen Erinnerungen.
+<img src="/images/workmate/os.png" alt="WORKMATE OS" width="72" height="65" />
 
-**Stack:** Flutter (Web + Android) · FastAPI · PostgreSQL · Claude AI · Celery · Firebase FCM  
-**Status:** Beta live  
-**Live:** [workmate-private.phudevelopement.xyz](https://workmate-private.phudevelopement.xyz)  
-**Repo:** [commanderphu/workmate_private](https://github.com/commanderphu/workmate_private)
+### <span style={{ color: "#0077FF" }}>WORKMATE | OS</span>
 
----
+**Die ERP- und CRM-Plattform.** Aus der Personalakte von damals ist eine vollständige Verwaltungsplattform geworden: Personal und Abteilungen, Kunden, Projekte und Budgets, Rechnungen, Zeiterfassung, Support-Tickets, Wissensdatenbank, Self-Service für Mitarbeitende, Prüfprotokoll.
 
-### 📡 Workmate Live
-**Self-hosted Live-Streaming & Event-Broadcasting**
+Version 4.0, vier abgeschlossene Ausbaustufen, im Einsatz.
 
-Cross-platform Streaming-Lösung für Events, Content Creator und Organisationen. OBS Studio-Steuerung per Web-UI, gleichzeitiges Streaming zu mehreren Plattformen (Twitch, YouTube), System-Monitoring via lokalem Agent.
+**Stack:** Vue 3 · FastAPI · PostgreSQL · Zitadel SSO (OAuth2/OIDC) · Docker
 
-Einsatzszenarien: Jusos-Bezirkskonferenzen, Gottesdienste, Corporate Town Halls, Twitch-Streams.
-
-**Stack:** Go · React · TypeScript · SQLite · OBS WebSocket  
-**Status:** In Entwicklung  
-**Repo:** [K.I.T. Solutions / workmate_live](https://github.com/K-I-T-Solutions)
+**Live:** [workmate.kit-it-koblenz.de](https://workmate.kit-it-koblenz.de)
 
 ---
 
-### 🔍 Workmate Checkup
-**Linux System-Inventar & Diagnose-Agent**
+<img src="/images/workmate/live.png" alt="WORKMATE LIVE" width="72" height="65" />
 
-Leichtgewichtiger Go-Agent für IT-Support: sammelt Hardware-Infos, Service-Status, Netzwerkdaten, installierte Pakete und Logs – und generiert daraus lesbare Support-Reports für Tickets.
+### <span style={{ color: "#D500F9" }}>WORKMATE | LIVE</span>
 
-**Stack:** Go  
-**Status:** In Entwicklung  
-**Repo:** [commanderphu/workmate_checkup](https://github.com/commanderphu/workmate_checkup)
+**Streaming und Broadcast, selbstgehostet.** OBS-Steuerung über eine Weboberfläche, gleichzeitige Ausspielung an mehrere Plattformen, Systemüberwachung über einen lokalen Agenten.
 
----
+Gebaut für das, was ich selbst mache: Bezirkskonferenzen, Gottesdienste, Firmenveranstaltungen, Twitch.
 
-### 🔐 Workmate Access
-**NFC-Zugangssystem mit ESP32**
+**Stack:** Go · React · TypeScript · SQLite · OBS WebSocket
 
-Physisches Zugangskontrollsystem: ESP32-Firmware liest NFC-Chips und kommuniziert mit einem FastAPI-Backend zur Verwaltung und Protokollierung von Zugangsberechtigungen.
-
-**Stack:** Go · ESP32 (PlatformIO) · FastAPI · PostgreSQL  
-**Status:** In Entwicklung  
-**Repo:** [commanderphu/workmate-access](https://github.com/commanderphu/workmate-access)
+**Stand:** in Entwicklung
 
 ---
 
-## Vision
+<img src="/images/workmate/event.png" alt="WORKMATE EVENT" width="72" height="65" />
 
-> *Ein Ökosystem von Tools, das Arbeit menschlicher macht – für Unternehmen, Freelancer, Neurodivergente und alle, die ihren Alltag besser organisieren wollen.*
+### <span style={{ color: "#00E676" }}>WORKMATE | EVENT</span>
 
-Workmate ist Teil der **K.I.T. Solutions-Philosophie:** Ethische, offene und nachhaltige IT – für Menschen, nicht gegen sie.
+**Der Betrieb vor Ort.** Ticketing, Einlass per QR-Scanner, Abendkasse, Equipment, Personal und Programm – die operative Seite einer Veranstaltung.
+
+Die Abgrenzung zu LIVE ist bewusst: LIVE kümmert sich um das Signal, EVENT um alles davor und daneben. Beide teilen Anmeldung und Echtzeitmuster.
+
+**Stack:** Go · React · Vite · SQLite
+
+**Stand:** in Entwicklung, lauffähiger Projektstand
+
+---
+
+<img src="/images/workmate/access.png" alt="WORKMATE ACCESS" width="72" height="65" />
+
+### <span style={{ color: "#00E5FF" }}>WORKMATE | ACCESS</span>
+
+**Zutrittskontrolle mit eigener Hardware.** Eine ESP32-Firmware liest NFC-Chips und spricht mit einem Backend, das Berechtigungen verwaltet und jeden Zutritt protokolliert.
+
+**Stack:** ESP32 (PlatformIO) · Go · FastAPI · PostgreSQL
+
+**Stand:** in Entwicklung
+
+---
+
+<img src="/images/workmate/checkup.png" alt="WORKMATE CHECKUP" width="72" height="65" />
+
+### <span style={{ color: "#FFC400" }}>WORKMATE | CHECKUP</span>
+
+**Diagnose für den Support.** Ein schlanker Go-Agent sammelt Hardware, Dienste, Netzwerk, Pakete und Protokolle eines Linux-Systems – und macht daraus einen lesbaren Bericht, der direkt ins Ticket kann.
+
+Entstanden aus dem Alltag im Außendienst: Die Hälfte jeder Störungsmeldung ist das Zusammensuchen von Zustandsinformationen.
+
+**Stack:** Go
+
+**Stand:** in Entwicklung
+
+---
+
+## Das Farbsystem
+
+Jedes Modul hat eine eigene Signalfarbe – im Interface für aktive Zustände, Symbole und den charakteristischen Schimmer hinter dem Zeichen. Die Dachmarke bleibt orange.
+
+| Modul | Farbe | |
+|---|---|---|
+| **WORKMATE** (Dachmarke) | Accent Orange | `#FF9100` |
+| **WORKMATE \| OS** | Electric Blue | `#0077FF` |
+| **WORKMATE \| LIVE** | Neon Purple | `#D500F9` |
+| **WORKMATE \| EVENT** | Laser Green | `#00E676` |
+| **WORKMATE \| ACCESS** | Cyber Cyan | `#00E5FF` |
+| **WORKMATE \| CHECKUP** | Bright Amber | `#FFC400` |
+
+Alle Oberflächen sind auf Anthrazit `#232223` gebaut – dunkel als Standard, nicht als Umschaltoption.
+
+---
+
+## Der verwandte Einzelgänger
+
+**Workmate Private** trägt den Namen, gehört aber nicht zur Suite. Es ist mein persönlicher Assistent für ADHS: Dokumente mit der Kamera erfassen und auswerten lassen, Aufgaben verwalten, Kalender in beide Richtungen abgleichen, Erinnerungen in mehreren Stufen.
+
+Von einem Neurodivergenten für Neurodivergente – andere Zielgruppe, andere Entscheidungen, deshalb bewusst getrennt.
+
+**Stack:** Flutter (Web + Android) · FastAPI · PostgreSQL · Claude AI · Celery · Firebase FCM
+
+**Stand:** Beta, live
+
+**Live:** [workmate-private.phudevelopement.xyz](https://workmate-private.phudevelopement.xyz)
+
+---
+
+## Wofür das Ganze
+
+> Ein Werkzeugkasten, der Arbeit menschlicher macht – für Unternehmen, Selbstständige, Neurodivergente und alle, die ihren Alltag besser organisiert haben wollen.
+
+WORKMATE folgt der Haltung von **K.I.T. Solutions:** ethische, offene und nachhaltige IT – für Menschen, nicht gegen sie.

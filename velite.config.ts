@@ -111,6 +111,9 @@ const projects = defineCollection({
       repo: s.string().optional(),
       demo: s.string().optional(),
       featured: s.boolean().default(false),
+      // Reihenfolge in der Startseiten-Reihe. Kleiner = weiter vorne.
+      // Ohne Angabe entscheidet das Datum, neueste zuerst.
+      featuredOrder: s.number().optional(),
       status: s.enum(['active', 'completed', 'archived', 'wip']).default('wip'),
       body: s.mdx(),
     })
