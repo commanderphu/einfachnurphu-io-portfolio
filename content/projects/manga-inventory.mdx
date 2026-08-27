@@ -1,7 +1,7 @@
 ---
 title: "Manga Inventory – Sammlung digital verwalten"
 slug: "manga-inventory"
-summary: "Multi-Plattform Verwaltungssystem für Manga-Sammlungen: Web-Frontend, REST-API und Flutter Mobile App mit Barcode-Scanner – entstanden aus einer Excel-Liste."
+summary: "Web, App und API für eine Manga-Sammlung von 156 Bänden – gebaut, weil Jessica den Überblick verloren hatte und eine Excel-Liste nicht mehr reichte."
 tags: ["Next.js", "Flutter", "Node.js", "PostgreSQL", "Docker", "Homelab"]
 repo: "https://github.com/commanderphu/manga-inventory"
 date: 2026-08-17
@@ -13,9 +13,15 @@ demo: "https://manga.phudevelopement.xyz"
 tech: ["Next.js 15", "Flutter", "Node.js 20", "Express", "PostgreSQL", "Docker", "GitHub Actions"]
 ---
 
-<Callout>Entstanden aus dem Wunsch, eine analoge Excel-Manga-Liste digital, durchsuchbar und mobil zugänglich zu machen.</Callout>
+<Callout>Jessica hatte über die Jahre so viele Manga gesammelt, dass sie den Überblick verlor. Ich so: hold my beer.</Callout>
 
-**Manga Inventory** ist ein Multi-Plattform-System zur Verwaltung meiner Manga-Sammlung – läuft selbstgehostet im Homelab.
+Angefangen hat es mit **einer Excel-Tabelle**. Titel, Band, Autor, Genre, Verlag – und dazu die Felder, auf die es wirklich ankommt: gelesen oder nicht, doppelt gekauft, im Bestand.
+
+Denn das ist das eigentliche Problem einer gewachsenen Sammlung. Nicht, dass man nicht wüsste, was man mag. Sondern dass man im Laden steht und **nicht mehr weiß, ob man Band 14 schon hat.**
+
+Genau dafür benutzt Jessica die Datenbank heute: beim Einkaufen. Ein Blick aufs Handy, und sie sieht, was fehlt und was schon zweimal im Regal steht.
+
+Aus der Tabelle wurde eine richtige Anwendung. Inzwischen sind es **156 Titel**.
 
 ### Was es kann
 
@@ -38,7 +44,7 @@ Die drei Teile laufen an drei verschiedenen Orten – jeder da, wo er hingehört
 
 - **API** als Container auf einem eigenen Server, Image aus der GitHub Container Registry
 - **Frontend** auf Vercel unter [manga.phudevelopement.xyz](https://manga.phudevelopement.xyz)
-- **App** im internen Test des Play Stores – bewusst nicht öffentlich, die Sammlung ist meine
+- **App** im internen Test des Play Stores – bewusst nicht veröffentlicht, das Ding ist für uns gebaut
 
 ### Vom Commit in den Betrieb
 
