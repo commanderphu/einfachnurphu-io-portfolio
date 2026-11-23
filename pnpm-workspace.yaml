@@ -1,3 +1,11 @@
+packages:
+  - "."
+
+overrides:
+  vfile: "6.0.3"
+  vfile-message: "4.0.3"
+  unified: "11.0.4"
+
 allowBuilds:
   esbuild: true
   rclone.js: true
